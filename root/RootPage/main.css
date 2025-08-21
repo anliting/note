@@ -1,0 +1,8 @@
+.root>.rootPage{
+  position:relative;
+  margin:0 auto;
+  height:100%;
+}
+.root>.rootPage>.mainLayer{
+  height:100%;
+}

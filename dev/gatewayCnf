@@ -1,0 +1,15 @@
+server{
+  listen                443 ssl;
+  listen                443 quic reuseport;
+  http2                 on;
+  server_name           ::1;
+  ssl_certificate       /app/crt;
+  ssl_certificate_key   /app/key;
+  add_header Alt-Svc    'h3=":443"; ma=86400';
+  client_max_body_size  16g;
+  location /{
+    proxy_http_version        1.1;
+    proxy_request_buffering   off;
+    proxy_pass                http://app;
+  }
+}

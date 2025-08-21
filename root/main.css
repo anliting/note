@@ -1,0 +1,145 @@
+@import"ContextMenu/main.css";
+@import"FolderPage/main.css";
+@import"NoteEditPage/main.css";
+@import"RootPage/main.css";
+@import"SettingPage/main.css";
+@import"TopBar/main.css";
+@import"UploadTaskPage/main.css";
+@font-face {
+  font-family: 'Material Symbols Sharp';
+  font-style: normal;
+  src: url(%23ms.woff2) format('woff2');
+}
+.material-symbols-sharp{
+  font-family: 'Material Symbols Sharp';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+html,body{
+  height:100%;
+}
+body{
+  margin:0;
+  background:#000;
+}
+.root{
+  height:100%;
+  transition-property:background,text-shadow;
+  transition-duration:.2s;
+  font-family:sans-serif;
+}
+.root::before{
+  content:"";
+  display:table;
+}
+.root button{
+  border:0;
+  padding:0;
+  line-height:0;
+  transition-property:background,text-shadow;
+  transition-duration:.2s;
+}
+.root select{
+  border:0;
+  padding:0;
+  outline:none;
+  transition-property:background,text-shadow;
+  transition-duration:.2s;
+}
+.root input{
+  border:0;
+  padding:0;
+  outline:none;
+  transition-property:background,text-shadow;
+  transition-duration:.2s;
+}
+.root{
+  line-height:0;
+}
+.root>*{
+  width:calc(var(--zoom)*1px);
+}
+.root>* select{
+  display:block;
+  width:calc(var(--zoom)*1px);
+  aspect-ratio:5/1;
+  font-size:calc(.1*var(--zoom)*1px);
+}
+.root>* button.typeA{
+  width:calc(.4*var(--zoom)*1px);
+  aspect-ratio:4/1;
+  font-size:calc(.05*var(--zoom)*1px);
+}
+.root>* input{
+  display:block;
+  margin-top:calc(.02*var(--zoom)*1px);
+  width:calc(.84*var(--zoom)*1px);
+  height:calc(.1*var(--zoom)*1px);
+  padding:calc(.05*var(--zoom)*1px) calc(.08*var(--zoom)*1px);
+  font-size:calc(.1*var(--zoom)*1px);
+}
+@media(pointer:coarse){
+}
+@media(pointer:fine){
+}
+.root .main{
+  box-sizing:border-box;
+  height:calc(100% - .15*var(--zoom)*1px);
+  padding-bottom:calc(.2*var(--zoom)*1px);
+  overflow-y:scroll;
+  scrollbar-width:none;
+}
+.root.dark{
+  background:#0f0f0f;
+  color:#e0e0e0;
+  text-shadow:0 0 .0625em rgba(0,0,0,.4),.0625em .0625em .0625em rgba(0,0,0,.2);
+}
+.root.dark>*{
+  background:#1f1f1f;
+}
+.root.dark select{
+  background:#2f2f2f;
+  color:#fff;
+}
+.root.dark button{
+  background:none;
+  color:#fff;
+}
+.root.dark button.typeA{
+  background:#3f3f3f;
+}
+.root.dark input{
+  background:#2f2f2f;
+  color:#fff;
+}
+.root.light{
+  background:#f0f0f0;
+  color:#1f1f1f;
+  text-shadow:0 0 .0625em rgba(255,255,255,.4),.0625em .0625em .0625em rgba(255,255,255,.2);
+}
+.root.light>*{
+  background:#e0e0e0;
+}
+.root.light select{
+  background:#c0c0c0;
+  color:#000;
+}
+.root.light button{
+  background:none;
+  color:#000;
+}
+.root.light button.typeA{
+  background:#c0c0c0;
+}
+.root.light input{
+  background:#c0c0c0;
+  color:#000;
+}

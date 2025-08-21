@@ -1,0 +1,35 @@
+.root .contextMenu{
+  position:absolute;
+  top:0;
+  left:0;
+  display:grid;
+  height:100%;
+  width:100%;
+  place-items:center;
+  cursor:default;
+}
+.root .contextMenu>*{
+  width:80%;
+  box-shadow:0 0 calc(.01*var(--zoom)*1px) rgba(0,0,0,.6);
+  background-color:#2f2f2f;
+  line-height:1;
+}
+.root .contextMenu>*>*{
+  display:flex;
+  height:calc(.2*var(--zoom)*1px);
+  align-items:center;
+  font-size:calc(.08*var(--zoom)*1px);
+  font-family:sans-serif;
+}
+.root .contextMenu>*>*{
+  transition-property:background;
+  transition-duration:.2s;
+}
+.root .contextMenu>*>:hover{
+  background-color:#4f4f4f;
+}
+.root .contextMenu>*>*>.material-symbols-sharp{
+  padding:0 4%;
+  font-size:calc(.14*var(--zoom)*1px);
+}
+

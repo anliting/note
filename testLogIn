@@ -1,0 +1,8 @@
+#!/bin/bash
+curl -v -d '{
+  "function":"logIn",
+  "argument":{
+    "username":"test",
+    "password":"cCWFpxpAqfqw4HB"
+  }
+}' https://[::1]/%23api

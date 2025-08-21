@@ -1,0 +1,16 @@
+.root>.settingPage{
+  position:relative;
+  margin:0 auto;
+  height:100%;
+}
+.root>.settingPage .styleSelect{
+  margin-top:calc(.05*var(--zoom)*1px);
+}
+.root>.settingPage .title{
+  margin-top:calc(.05*var(--zoom)*1px);
+  font-size:calc(.08*var(--zoom)*1px);
+  line-height:1;
+}
+.root>.settingPage button.typeA{
+  margin-top:calc(.02*var(--zoom)*1px);
+}

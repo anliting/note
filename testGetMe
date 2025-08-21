@@ -1,0 +1,4 @@
+#!/bin/bash
+curl -v -b 'session=lGd/qsrzVILSEy2V1mnBMkudXGwevmudZ0VqptchhP0=' -d '{
+  "function":"getMe"
+}' https://[::1]/%23api

@@ -1,0 +1,33 @@
+.root .topBar{
+  display:flex;
+  box-shadow:0 0 calc(.01*var(--zoom)*1px) rgba(0,0,0,.6);
+  width:calc(1*var(--zoom)*1px);
+  height:calc(.15*var(--zoom)*1px);
+  cursor:default;
+}
+.root .topBar>.left{
+  width:calc(.15*var(--zoom)*1px);
+  aspect-ratio:1/1;
+  font-size:calc(.07*var(--zoom)*1px);
+}
+.root .topBar>.leftMargin{
+  width:calc(.05*var(--zoom)*1px);
+}
+.root .topBar>.title{
+  display:flex;
+  align-items:center;
+  font-size:calc(.06*var(--zoom)*1px);
+  line-height:1.2;
+  font-family:sans-serif;
+  width:calc(.8*var(--zoom)*1px);
+}
+.root .topBar>.title>*{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.root .topBar>.right{
+  width:calc(.15*var(--zoom)*1px);
+  aspect-ratio:1/1;
+  font-size:calc(.07*var(--zoom)*1px);
+}
