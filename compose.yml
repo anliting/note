@@ -1,0 +1,14 @@
+services:
+  app:
+    environment:
+      - dbPassword=${dbPassword}
+    image: note-app
+    init: true
+    volumes:
+      - ./bin:/app/bin
+  db:
+    environment:
+      - POSTGRES_PASSWORD=${dbPassword}
+    image: postgres:18.0
+    volumes:
+      - ./db:/var/lib/postgresql

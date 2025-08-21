@@ -1,0 +1,2 @@
+#!/bin/bash
+curl -v -b 'session=lGd/qsrzVILSEy2V1mnBMkudXGwevmudZ0VqptchhP0=' -d 'hello, world' https://[::1]/%23putBinary

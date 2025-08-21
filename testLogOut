@@ -1,0 +1,4 @@
+#!/bin/bash
+curl -v -b 'session=8igj29sSACika/YdXZ1BtJPDLmdv3Pss6/ydG9t7rDY=' -d '{
+  "function":"logOut"
+}' https://[::1]/%23api

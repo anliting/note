@@ -1,0 +1,41 @@
+.root>.folderPage .folderItem{
+  display:flex;
+  height:calc(.2*var(--zoom)*1px);
+  align-items:center;
+  cursor:default;
+  transition-property:background;
+  transition-duration:.2s;
+}
+.root>.folderPage .folderItem.selected{
+  background:#3f3f3f;
+}
+.root>.folderPage .folderItem:hover{
+  background:#4f4f4f;
+}
+.root>.folderPage .folderItem>.icon{
+  display:grid;
+  width:calc(.2*var(--zoom)*1px);
+  height:calc(.2*var(--zoom)*1px);
+  place-items:center;
+  font-size:calc(.14*var(--zoom)*1px);
+}
+.root>.folderPage .folderItem>.title{
+  box-sizing:border-box;
+  width:calc(.65*var(--zoom)*1px);
+  max-height:calc(.15*var(--zoom)*1px);
+  overflow:hidden;
+  /*white-space:nowrap;
+  text-overflow:ellipsis;*/
+  /*display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:3;*/
+  line-height:1.2;
+  font-size:calc(.04*var(--zoom)*1px);
+}
+.root>.folderPage .folderItem>.right{
+  display:grid;
+  width:calc(.15*var(--zoom)*1px);
+  height:calc(.2*var(--zoom)*1px);
+  place-items:center;
+  font-size:calc(.08*var(--zoom)*1px);
+}

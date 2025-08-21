@@ -1,0 +1,49 @@
+create sequence"serial"as int8;
+create table"user"(
+  "user"int8 primary key default nextval('serial'),
+  "userUsername"text not null unique,
+  "userT"timestamp not null default now(),
+  "userPassword"text not null
+);
+create table"session"(
+  "session"int8 primary key default nextval('serial'),
+  "sessionKey"bytea not null unique,
+  "user"int8 not null references"user"on delete cascade,
+  "sessionT"timestamp not null default now()
+);
+create table"file"(
+  "file"int8 primary key default nextval('serial'),
+  "user"int8 not null references"user"on delete cascade,
+  "fileType"text not null
+);
+create table"binary"(
+  "binary"int8 primary key default nextval('serial')
+    references"file"on delete cascade,
+  "binaryT"timestamp not null default now()
+);
+create table"note"(
+  "note"int8 primary key default nextval('serial')
+    references"file"on delete cascade,
+  "noteT"timestamp not null default now(),
+  "noteBody"text not null
+);
+create table"folder"(
+  "folder"int8 primary key default nextval('serial')
+    references"file"on delete cascade
+);
+create table"folderItem"(
+  "folderItem"int8 primary key default nextval('serial'),
+  "folder"int8 references"folder"on delete cascade,
+  "folderItemName"text not null,
+  "file"int8 references"file"on delete cascade
+);
+alter table"user"add column"folder"
+  int8 not null references"folder"
+  deferrable initially deferred;
+alter table"binary"add column"binaryState"text;
+update"binary"set"binaryState"='ready';
+alter table"binary"alter column"binaryState"set not null;
+--create table"noteTag"(
+--  "note"int8 not null references"user"on delete cascade,
+--  "tag"text not null
+--);
