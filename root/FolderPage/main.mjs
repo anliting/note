@@ -16,6 +16,7 @@ export default component(({
   goMoveFolderPage,
   goNoteEditPage,
   goSettingPage,
+  goUploadTaskPage,
   move,
   movingFolderItem,
   me,
@@ -178,8 +179,7 @@ export default component(({
         },
           uploading?button({
             class:'right uploading material-symbols-sharp',
-            onclick:async()=>{
-            },
+            onclick:goUploadTaskPage,
           },
             '\ue2c3',
           ):[],

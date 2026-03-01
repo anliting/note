@@ -1,10 +1,11 @@
 import{$tn,Root,component,dom,useEffect,useRef,useState}from'concept'
-import MapSet from      './MapSet/main.mjs'
-import NoteEditPage from'./NoteEditPage/main.mjs'
-import RootPage from    './RootPage/main.mjs'
-import FolderPage from  './FolderPage/main.mjs'
-import SettingPage from './SettingPage/main.mjs'
-import{api}from         './api/main.mjs'
+import MapSet from          './MapSet/main.mjs'
+import NoteEditPage from    './NoteEditPage/main.mjs'
+import RootPage from        './RootPage/main.mjs'
+import FolderPage from      './FolderPage/main.mjs'
+import SettingPage from     './SettingPage/main.mjs'
+import UploadTaskPage from  './UploadTaskPage/main.mjs'
+import{api}from             './api/main.mjs'
 let{div}=dom
 let serviceWorkerRegistration,setStyle
 navigator.serviceWorker.addEventListener('message',e=>{
@@ -182,6 +183,7 @@ let RootC=component(()=>{
           pushStack([crypto.randomUUID(),'MoveFolderPage',{folder,movingFolderItem,layer:0}]),
         goNoteEditPage:note=>pushStack([crypto.randomUUID(),'NoteEditPage',note]),
         goSettingPage:()=>pushStack([crypto.randomUUID(),'SettingPage']),
+        goUploadTaskPage:()=>pushStack([crypto.randomUUID(),'UploadTaskPage']),
         key:page[page.length-1][0],
         me,
         putBinaryArr:uploadManager.current.put.bind(uploadManager.current),
@@ -267,6 +269,12 @@ let RootC=component(()=>{
           })
         },
         style,
+      }),
+      UploadTaskPage:()=>UploadTaskPage({
+        goBack:popStack,
+        key:page[page.length-1][0],
+        me,
+        uploadTask,
       }),
     }[page[page.length-1][1]](),
   )
