@@ -1,5 +1,5 @@
 import{
-  $tn,component,dom
+  $tn,component,dom,useRef,
 }from'concept'
 import TopBar from          '../TopBar/main.mjs'
 import UploadTaskItem from  './UploadTaskItem/main.mjs'
@@ -8,8 +8,9 @@ export default component(({
   goBack,
   me,
   uploadTask,
-})=>
-  me?div({
+})=>{
+  let weakMap=useRef(new WeakMap)
+  return me?div({
     class:'uploadTaskPage',
   },
     TopBar({
@@ -23,7 +24,7 @@ export default component(({
       uploadTask.map(uploadTask=>
         UploadTaskItem({
           icon:'\ue9fc',
-          key:uploadTask,
+          key:weakMap.current.getOrInsert(uploadTask,Symbol()),
           title:uploadTask.file.name,
           loaded:uploadTask.loaded,
           total:uploadTask.total,
@@ -31,4 +32,4 @@ export default component(({
       ),
     ),
   ):$tn()
-)
+})
