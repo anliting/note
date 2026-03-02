@@ -4,6 +4,7 @@ import mime from          'mime-types'
 import url from           'url'
 import{getSessionKey}from '../user/main.mjs'
 let allowedMimeSet=new Set([
+  'application/pdf',
   'audio/mp4',
   'audio/mpeg',
   'image/avif',
