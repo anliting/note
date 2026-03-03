@@ -4,8 +4,8 @@ import pg from              'pg'
 import{buffer}from          'stream/consumers'
 import url from             'url'
 import cutBinary from       './cutBinary/main.mjs'
-import downloadBinary from  './downloadBinary/main.mjs'
 import{apiMap as file}from  './file/main.mjs'
+import folderItem from      './folderItem/main.mjs'
 import{apiMap as note}from  './note/main.mjs'
 import putBinary from       './putBinary/main.mjs'
 import{apiMap as user}from  './user/main.mjs'
@@ -83,7 +83,6 @@ let pathnameMap={
     'favicon/android-chrome-512x512.png',
     {lastModified:1},
   ),
-  '/%23downloadBinary':downloadBinary,
   '/%23manifest':fileResponseHandler(
     'application/manifest+json',
     'build/manifest',
@@ -157,24 +156,33 @@ let garbargeCollector=(async()=>{
 })()
 let s=http.createServer((rq,rs)=>{
   let rqUrl=new url.URL(rq.url,'http://a')
+  let o={
+    db,
+    reply:(body,status=200,header={},o={})=>{
+      if(body in o)
+        body=o.body
+      else{
+        body=JSON.stringify(body)
+        header['content-type']='application/json'
+      }
+      rs.writeHead(status,header)
+      rs.end(body)
+    },
+    rq,
+    rqUrl,
+    rs,
+  }
   if(pathnameMap[rqUrl.pathname])
-    pathnameMap[rqUrl.pathname]({
-      db,
-      reply:(body,status=200,header={},o={})=>{
-        if(body in o)
-          body=o.body
-        else{
-          body=JSON.stringify(body)
-          header['content-type']='application/json'
-        }
-        rs.writeHead(status,header)
-        rs.end(body)
-      },
-      rq,rs
-    })
+    pathnameMap[rqUrl.pathname](o)
   else{
-    rs.writeHead(400)
-    rs.end()
+    let pathnameMatchInt=rqUrl.pathname.match(/^\/([0-9]+)$/)
+    if(pathnameMatchInt){
+      o.folderItem=pathnameMatchInt[1]
+      folderItem(o)
+    }else{
+      rs.writeHead(400)
+      rs.end()
+    }
   }
 })
 s.listen(80)

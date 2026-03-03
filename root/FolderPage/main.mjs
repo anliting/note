@@ -69,8 +69,8 @@ export default component(({
   },[me,folder,folderItemTabT])
   let enter=folderItemRow=>{
     if(folderItemRow.fileType=='binary')
-      Object.assign(document.createElement("a"),{
-        href:`%23downloadBinary?folderItem=${folderItemRow.folderItem}`
+      Object.assign(document.createElement('a'),{
+        href:folderItemRow.folderItem
       }).click()
     else if(folderItemRow.fileType=='folder'){
       if(move&&folderItemRow.folderItem==movingFolderItem)

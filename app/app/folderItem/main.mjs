@@ -25,9 +25,8 @@ let allowedMimeSet=new Set([
   'video/x-matroska',
   'video/x-msvideo',
 ])
-export default getSessionKey(async({db,rq,rs,sk})=>{
+export default getSessionKey(async({db,folderItem,rq,rs,sk})=>{
   let urlObj=new url.URL(rq.url,'http://a')
-  let folderItem=urlObj.searchParams.get('folderItem')
   let res=await db.pool.query(`
     select"folderItem"."folderItemName","folderItem"."file"
     from"session"natural join"file" "a"
@@ -46,7 +45,18 @@ export default getSessionKey(async({db,rq,rs,sk})=>{
     return rs.end()
   }
   let row=res.rows[0]
+  let
+    mimeType=mime.lookup(row.folderItemName),
+    contentType=allowedMimeSet.has(mimeType)?
+      mimeType
+    :
+      'application/octet-stream'
   let status=200,header={},readStreamOption={}
+  header.etag=contentType
+  if(rq.headers['if-none-match']==header.etag){
+    rs.writeHead(304,header)
+    return rs.end()
+  }
   let path=`bin/${row.file}`
   let stat=await fs.promises.stat(path)
   if(rq.headers.range){
@@ -73,16 +83,10 @@ export default getSessionKey(async({db,rq,rs,sk})=>{
     readStreamOption.end=end-1
   }else
     header['content-length']=stat.size
-  let mimeType=mime.lookup(row.folderItemName)
-  if(allowedMimeSet.has(mimeType)){
-    header['content-type']=mimeType
-    header['content-disposition']=
-      `inline;filename*=UTF-8''${encodeURIComponent(row.folderItemName)}`
-  }else{
-    header['content-type']='application/octet-stream'
-    header['content-disposition']=
-      `attachment;filename*=UTF-8''${encodeURIComponent(row.folderItemName)}`
-  }
+  header['content-type']=contentType
+  header['content-disposition']=`${
+    urlObj.searchParams.get('a')!=null?'attachment':'inline'
+  };filename*=UTF-8''${encodeURIComponent(row.folderItemName)}`
   rs.writeHead(status,header)
   fs.createReadStream(path,readStreamOption).pipe(rs)
 })
