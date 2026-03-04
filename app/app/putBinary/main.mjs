@@ -27,10 +27,9 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
         let
           folder,fileName,
           ws=fs.createWriteStream(`bin/${binary}`,{flush:true}),
-          wsClose=new Promise((rs,rj)=>ws.on('error',rj).on('close',rs)),
-          fileWs
-        try{
-          let bb=Busboy({headers:rq.headers}).on('field',(k,v)=>{
+          wsClose=new Promise((rs,rj)=>ws.on('error',rj).on('close',rs)).catch(()=>{console.log('a')}),
+          fileWs,
+          bb=Busboy({headers:rq.headers}).on('field',(k,v)=>{
             if(k=='folder')
               folder=v
           }).on('file',(fieldName,file,info)=>{
@@ -41,12 +40,12 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
               rs({type:
                 rq.readableAborted||rq.destroyed?'badMessage':'serverError'
               })
-              //bb.destroy(e)
+              bb.destroy(e)
             })
           })
+        try{
           await pipeline(rq,bb)
         }catch(e){
-          //console.error(e)
           return rs({type:'badMessage'})
         }
         if(!(folder&&fileWs))
