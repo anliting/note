@@ -103,7 +103,13 @@ let RootC=component(()=>{
     history.pushState(state.map(a=>a.slice(0,3)),'')
     setPage(state)
   }
-  let popStack=()=>history.back()
+  let popStack=()=>{
+    if(history.length!=1)
+      return history.back()
+    let state=page.slice(0,page.length-1)
+    history.replaceState(state.map(a=>a.slice(0,3)),'')
+    setPage(state)
+  }
   useEffect(function*(){
     if(!uploadTask.length)
       return yield
