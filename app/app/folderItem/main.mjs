@@ -69,7 +69,9 @@ export default getSessionKey(async({db,folderItem,rq,rs,sk})=>{
       start=+match[1],
       end=Math.min(
         match[2]==''?Infinity:+match[2]+1,
-        start+2**20,
+// 2**20 seems to hit a limit that Chrome expects to see some key data for PDF in a limited number of requests.
+        //start+2**20,
+        start+2**24,
         stat.size
       )
     if(end<start){
@@ -88,5 +90,8 @@ export default getSessionKey(async({db,folderItem,rq,rs,sk})=>{
     urlObj.searchParams.get('a')!=null?'attachment':'inline'
   };filename*=UTF-8''${encodeURIComponent(row.folderItemName)}`
   rs.writeHead(status,header)
-  fs.createReadStream(path,readStreamOption).pipe(rs)
+  let readStream=fs.createReadStream(path,readStreamOption)
+  readStream.pipe(rs)
+  let a=0
+  readStream.on('data',data=>console.log('b',rq.headers.range,a+=data.length))
 })
