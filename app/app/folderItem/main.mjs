@@ -1,6 +1,7 @@
 import Busboy from        'busboy'
 import fs from            'fs'
 import mime from          'mime-types'
+import stream from        'stream/promises'
 import url from           'url'
 import{getSessionKey}from '../user/main.mjs'
 let allowedMimeSet=new Set([
@@ -90,8 +91,5 @@ export default getSessionKey(async({db,folderItem,rq,rs,sk})=>{
     urlObj.searchParams.get('a')!=null?'attachment':'inline'
   };filename*=UTF-8''${encodeURIComponent(row.folderItemName)}`
   rs.writeHead(status,header)
-  let readStream=fs.createReadStream(path,readStreamOption)
-  readStream.pipe(rs)
-  let a=0
-  readStream.on('data',data=>console.log('b',rq.headers.range,a+=data.length))
+  stream.pipeline(fs.createReadStream(path,readStreamOption),rs)
 })
