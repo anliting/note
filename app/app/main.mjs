@@ -185,6 +185,7 @@ let s=http.createServer((rq,rs)=>{
     }
   }
 })
+s.requestTimeout=0
 s.listen(80)
 await new Promise(rs=>process.on('SIGINT',rs).on('SIGTERM',rs))
 abortController.abort()
