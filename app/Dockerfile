@@ -24,4 +24,4 @@ COPY --from=0 /app1/node_modules node_modules
 COPY favicon favicon
 COPY app/app app
 COPY --from=0 /app/build build
-CMD ["node","app/main.mjs"]
+CMD ["node","--unhandled-rejections=none","app/main.mjs"]

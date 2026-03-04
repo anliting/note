@@ -4,7 +4,7 @@ import{pipeline}from      'stream/promises'
 import cutBinary from     '../cutBinary/main.mjs'
 import{getSessionKey}from '../user/main.mjs'
 export default getSessionKey(async({db,reply,rq,rs,sk})=>{
-  reply(await new Promise(rs=>{
+  reply(await new Promise((rs,rj)=>{
     ;(async()=>{
       let res=await db.pool.query(`
         with
@@ -27,7 +27,9 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
         let
           folder,fileName,
           ws=fs.createWriteStream(`bin/${binary}`,{flush:true}),
-          wsClose=new Promise((rs,rj)=>ws.on('error',rj).on('close',rs)).catch(()=>{console.log('a')}),
+          wsClose=new Promise((rs,rj)=>ws.on('error',rj).on('close',rs))
+        wsClose.catch(()=>{})
+        let
           fileWs,
           bb=Busboy({headers:rq.headers}).on('field',(k,v)=>{
             if(k=='folder')
@@ -71,8 +73,6 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
         if(!done)
           await cutBinary({db},binary)
       }
-    })().catch(e=>{
-      console.log('aaaaaaaaaaaaaaaaaaaaaa')
-    })
+    })().catch(rj)
   }))
 })
