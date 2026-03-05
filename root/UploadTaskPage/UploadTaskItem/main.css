@@ -19,7 +19,6 @@
   height:calc(.2*var(--zoom)*1px);
   flex-direction:column;
   justify-content:center;
-  /*overflow:hidden;*/
 }
 .root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.title{
   height:calc(.06*var(--zoom)*1px);
@@ -30,9 +29,19 @@
   text-overflow:ellipsis;
 }
 .root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.progress{
+  display:flex;
   height:calc(.06*var(--zoom)*1px);
   line-height:1.2;
   font-size:calc(.04*var(--zoom)*1px);
+}
+.root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.progress>*{
+  flex:1;
+}
+.root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.progress>.left{
+  text-align:left;
+}
+.root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.progress>.right{
+  text-align:right;
 }
 .root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.progressBar{
   height:calc(.01*var(--zoom)*1px);

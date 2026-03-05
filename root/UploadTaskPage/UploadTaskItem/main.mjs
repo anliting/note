@@ -23,9 +23,14 @@ export default component(({
         title,
       ),
       div({class:'progress'},
-        `${toFixed2B(loaded)} / ${toFixed2B(total)} (${
-          (~~(10000*loaded/total)/100).toFixed(2)
-        }%)`,
+        div({class:'left'},
+          toFixed2B(loaded),
+        ),
+        div({class:'right'},
+          `${
+            (~~(10000*loaded/total)/100).toFixed(2)
+          }%\u00a0${toFixed2B(total)}`,
+        ),
       ),
       div({class:'progressBar'},
         div({
