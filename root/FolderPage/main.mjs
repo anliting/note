@@ -88,14 +88,24 @@ export default component(({
     ref:pageRef,
     tabindex:'0',
     onkeydown:e=>{
+      if(!(
+        !e.altKey&&
+        !e.ctrlKey&&
+        !e.shiftKey
+      ))
+        return
       if(['Escape'].includes(e.key)){
         e.preventDefault()
         e.stopPropagation()
         setSelectedFolderItem(null)
       }else if(
-        !e.altKey&&
-        !e.ctrlKey&&
-        !e.shiftKey&&
+        ['ArrowLeft','h'].includes(e.key)&&
+        me.folder!=folder
+      ){
+        e.preventDefault()
+        e.stopPropagation()
+        goBack()
+      }else if(
         ['ArrowDown','j'].includes(e.key)
       ){
         e.preventDefault()
@@ -108,9 +118,6 @@ export default component(({
         }else if(folderItemTab.length)
           setSelectedFolderItem(folderItemTab[0].folderItem)
       }else if(
-        !e.altKey&&
-        !e.ctrlKey&&
-        !e.shiftKey&&
         ['ArrowUp','k'].includes(e.key)&&
         selectedFolderItem
       ){
@@ -121,9 +128,6 @@ export default component(({
             setSelectedFolderItem(folderItemTab[i-1].folderItem)
         })
       }else if(
-        !e.altKey&&
-        !e.ctrlKey&&
-        !e.shiftKey&&
         ['ArrowRight','Enter','l'].includes(e.key)&&
         selectedFolderItem
       ){
