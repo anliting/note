@@ -3,8 +3,8 @@
   height:calc(.2*var(--zoom)*1px);
   align-items:center;
   cursor:default;
-  transition-property:background;
-  transition-duration:.2s;
+  /*transition-property:background;
+  transition-duration:.2s;*/
 }
 .root>.folderPage .folderItem.selected{
   background:#3f3f3f;
