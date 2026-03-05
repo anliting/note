@@ -5,10 +5,18 @@ import TopBar from          '../TopBar/main.mjs'
 import UploadTaskItem from  './UploadTaskItem/main.mjs'
 let{button,div,input}=dom
 export default component(({
+  cutTask,
   goBack,
   me,
   uploadTask,
 })=>{
+  /*uploadTask=[...uploadTask,{
+    file:{
+      name:'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+    },
+    loaded:60*1e12,
+    total:100*1e12,
+  }]*/
   let weakMap=useRef(new WeakMap)
   return me?div({
     class:'uploadTaskPage',
@@ -23,6 +31,9 @@ export default component(({
     },
       uploadTask.map(uploadTask=>
         UploadTaskItem({
+          cutTask:()=>{
+            cutTask(uploadTask)
+          },
           icon:'\ue9fc',
           key:weakMap.current.getOrInsert(uploadTask,Symbol()),
           title:uploadTask.file.name,

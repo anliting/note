@@ -202,6 +202,7 @@ let RootC=component(()=>{
         style,
       }),
       UploadTaskPage:()=>UploadTaskPage({
+        cutTask:uploadManager.current.cut.bind(uploadManager.current),
         goBack:popStack,
         key:page[page.length-1][0],
         me,

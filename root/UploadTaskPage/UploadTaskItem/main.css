@@ -15,7 +15,7 @@
 }
 .root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain{
   display:flex;
-  width:calc(.75*var(--zoom)*1px);
+  width:calc(.6*var(--zoom)*1px);
   height:calc(.2*var(--zoom)*1px);
   flex-direction:column;
   justify-content:center;
@@ -25,6 +25,9 @@
   height:calc(.06*var(--zoom)*1px);
   line-height:1.2;
   font-size:calc(.04*var(--zoom)*1px);
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
 }
 .root>.uploadTaskPage .uploadTaskItem>.uploadTaskItemMain>.progress{
   height:calc(.06*var(--zoom)*1px);
@@ -41,4 +44,11 @@
   background-color:#ffffff;
   transform-origin:left;
   transition:transform 200ms ease-out;
+}
+.root>.uploadTaskPage .uploadTaskItem>.right{
+  display:grid;
+  width:calc(.2*var(--zoom)*1px);
+  height:calc(.2*var(--zoom)*1px);
+  place-items:center;
+  font-size:calc(.14*var(--zoom)*1px);
 }
