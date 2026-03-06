@@ -14,18 +14,17 @@
   width:calc(.05*var(--zoom)*1px);
 }
 .root .topBar>.title{
-  flex:1;
   display:flex;
   align-items:center;
   font-size:calc(.06*var(--zoom)*1px);
-  line-height:1;
+  line-height:1.2;
   font-family:sans-serif;
+  width:calc(.8*var(--zoom)*1px);
 }
 .root .topBar>.title>*{
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
+  white-space:nowrap;
   overflow:hidden;
+  text-overflow:ellipsis;
 }
 .root .topBar>.right{
   width:calc(.15*var(--zoom)*1px);
