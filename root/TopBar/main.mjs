@@ -11,6 +11,10 @@ export default({
   },
     leftIcon,
   ):div({class:'leftMargin'}),
-  div({class:'title'},title||''),
+  div({class:'title'},
+    div(
+      title||''
+    ),
+  ),
   ...child,
 )
