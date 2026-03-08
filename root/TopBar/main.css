@@ -8,7 +8,7 @@
 .root .topBar>.left{
   width:calc(.15*var(--zoom)*1px);
   aspect-ratio:1/1;
-  font-size:calc(.09*var(--zoom)*1px);
+  font-size:calc(.07*var(--zoom)*1px);
 }
 .root .topBar>.leftMargin{
   width:calc(.05*var(--zoom)*1px);
@@ -29,5 +29,5 @@
 .root .topBar>.right{
   width:calc(.15*var(--zoom)*1px);
   aspect-ratio:1/1;
-  font-size:calc(.09*var(--zoom)*1px);
+  font-size:calc(.07*var(--zoom)*1px);
 }

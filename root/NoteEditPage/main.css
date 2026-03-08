@@ -13,7 +13,7 @@
 .root>.noteEditPage>.topBar .wrap{
   width:calc(.15*var(--zoom)*1px);
   aspect-ratio:1/1;
-  font-size:calc(.09*var(--zoom)*1px);
+  font-size:calc(.07*var(--zoom)*1px);
 }
 .root>.noteEditPage>.topBar .wrap.off{
   color:#7f7f7f;
@@ -21,12 +21,12 @@
 .root>.noteEditPage>.topBar .delete{
   width:calc(.15*var(--zoom)*1px);
   aspect-ratio:1/1;
-  font-size:calc(.09*var(--zoom)*1px);
+  font-size:calc(.07*var(--zoom)*1px);
 }
 .root>.noteEditPage>.topBar .save{
   width:calc(.15*var(--zoom)*1px);
   aspect-ratio:1/1;
-  font-size:calc(.09*var(--zoom)*1px);
+  font-size:calc(.07*var(--zoom)*1px);
 }
 .root>.noteEditPage>.topBar .save.saved{
   color:#7f7f7f;

@@ -64,7 +64,7 @@ export default component(({
     class:'noteEditPage',
   },
     TopBar({
-      leftIcon:'\ue5c4',
+      leftIcon:'\ue2ea',
       onLeftClick:goBack,
     },
       noteRow?[

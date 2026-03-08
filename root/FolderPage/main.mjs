@@ -168,7 +168,7 @@ export default component(({
         })
       :
         TopBar({
-          leftIcon:'\ue5c4',
+          leftIcon:'\ue2ea',
           onLeftClick:goBack,
           title:`Move to ${folderItemName||''}`,
         })
@@ -177,7 +177,7 @@ export default component(({
           leftIcon:'\ue5d2',
           onLeftClick:goSettingPage,
         }:{
-          leftIcon:'\ue5c4',
+          leftIcon:'\ue2ea',
           onLeftClick:goBack,
           title:folderItemName||'',
         },
