@@ -51,21 +51,24 @@ apiMap.putFolder=getSessionKey(async({db,message,reply,sk})=>{
   let res=await db.pool.query(`
     with
     "a"as(
-      insert into"file"("user","fileType")
-      select"user",'folder'
-      from"session"
-      where"sessionKey"=$1
-      returning"file"
+      select"user","file" "folder"
+      from"session"natural join"file"
+      where"sessionKey"=$1 and"file"."file"=$2 and"file"."fileType"='folder'
     ),
     "b"as(
+      insert into"file"("user","fileType")
+      select"user",'folder'
+      from"a"
+      returning"file"
+    ),
+    "c"as(
       insert into"folderItem"("folder","folderItemName","file")
-      select"file"."file",'',"a"."file"
-      from"session"natural join"file","a"
-      where"sessionKey"=$1 and"file"."file"=$2 and"file"."fileType"='folder'
+      select"folder",'',"file"
+      from"a","b"
     )
     insert into"folder"("folder")
     select"file"
-    from"a"
+    from"b"
     returning"folder"
   `,[sk,message.folder])
   reply({type:'ok',folderTab:res.rows})
