@@ -66,7 +66,7 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
           from"session"natural join"file"
           where"sessionKey"=$1 and"file"."file"=$2 and"file"."fileType"='folder'
         `,[sk,folder,fileName,binary])).rowCount)
-          return rs({type:'badSessionKey'})
+          return rs({type:'bad'})
         rs({type:'ok',binary})
         done=1
       }finally{
