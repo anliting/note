@@ -1,6 +1,7 @@
 import Busboy from        'busboy'
 import fs from            'fs'
 import{pipeline}from      'stream/promises'
+import base from          '../base/main.mjs'
 import cutBinary from     '../cutBinary/main.mjs'
 import{getSessionKey}from '../user/main.mjs'
 export default getSessionKey(async({db,reply,rq,rs,sk})=>{
@@ -29,9 +30,10 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
           ws=fs.createWriteStream(`bin/${binary}`,{flush:true}),
           wsClose=new Promise((rs,rj)=>ws.on('error',rj).on('close',rs))
         wsClose.catch(()=>{})
-        let
-          fileWs,
-          bb=Busboy({headers:rq.headers}).on('field',(k,v)=>{
+        let fileWs
+        try{
+          let bb
+          await pipeline(rq,bb=Busboy({headers:rq.headers}).on('field',(k,v)=>{
             if(k=='folder')
               folder=v
           }).on('file',(fieldName,file,info)=>{
@@ -44,13 +46,11 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
               })
               bb.destroy(e)
             })
-          })
-        try{
-          await pipeline(rq,bb)
+          }))
         }catch(e){
           return rs({type:'badMessage'})
         }
-        if(!(folder&&fileWs))
+        if(!(folder&&base.isInt64String(folder)&&fileWs))
           return rs({type:'badMessage'})
         await fileWs
         await wsClose
