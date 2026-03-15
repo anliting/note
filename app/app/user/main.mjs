@@ -8,30 +8,27 @@ let parseCookieString=s=>{
   })
   return p
 }
-let sessionKeyOfCookieString=s=>{
-  let p
-  try{
-    p=parseCookieString(s)
-  }catch(e){
-    throw SyntaxError()
-  }
+let sessionKeyOfCookie=p=>{
   if(!(
     p.session?.length==1
   ))
     throw SyntaxError()
   try{
     return Buffer.from(p.session[0],'base64')
-  }catch(e){
+  }catch{
     throw SyntaxError()
   }
 }
 let getSessionKey=f=>async a=>{
   let{reply,rq}=a
-  try{
-    a.sk=sessionKeyOfCookieString(rq.headers.cookie)
-  }catch(e){
-    return reply({type:'badMessage'})
-  }
+  if(rq.headers.cookie)
+    try{
+      a.sk=sessionKeyOfCookie(parseCookieString(rq.headers.cookie))
+    }catch{
+      return reply('',400)
+    }
+  else
+    a.sk=null
   await f(a)
 }
 let apiMap={}
