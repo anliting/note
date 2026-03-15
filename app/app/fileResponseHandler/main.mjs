@@ -17,5 +17,5 @@ export default(contentType,path,o={})=>async({rq,rs})=>{
     header['last-modified']=lastModified
   if(etag)
     header['etag']=etag
-  stream.pipeline(fs.createReadStream(path),rs.writeHead(200,header))
+  await stream.pipeline(fs.createReadStream(path),rs.writeHead(200,header))
 }
