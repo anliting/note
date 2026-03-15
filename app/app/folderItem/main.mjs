@@ -89,7 +89,7 @@ export default getSessionKey(async({db,rq,rqUrl,rqUrlSplittedPathname,rs,sk})=>{
   header['content-disposition']=`${
     rqUrl.searchParams.get('a')!=null?'attachment':'inline'
   };filename*=UTF-8''${encodeURIComponent(row.folderItemName)}`
-  stream.pipeline(
+  await stream.pipeline(
     fs.createReadStream(path,readStreamOption),
     rs.writeHead(status,header)
   )
