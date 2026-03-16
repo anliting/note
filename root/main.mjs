@@ -12,19 +12,14 @@ navigator.serviceWorker.addEventListener('message',e=>{
   if(e.data.type=='setStyle')
     return setStyle(e.data.style)
 })
-let RootC=component(()=>{
-  let style
-  ;[style,setStyle]=useState('dark')
-  let[bcr,setBcr]=useState([1,1])
-  let[pageStack,setPageStack]=useState(history.state||[[crypto.randomUUID(),'RootPage']])
-  let[uploadTask,setUploadTask]=useState([])
-  let uploadManager=useRef(new UploadManager({setUploadTask}))
+let useHistoryStack=(defaultPage)=>{
+  let[pageStack,setPageStack]=useState(history.state||defaultPage)
   let setStack=stack=>{
     history.replaceState(stack.map(a=>a.slice(0,3)),'')
     setPageStack(stack)
   }
   let pushStack=a=>{
-    let state=[...pageStack,a]
+    let state=[...pageStack,[crypto.randomUUID(),...a]]
     history.pushState(state.map(a=>a.slice(0,3)),'')
     setPageStack(state)
   }
@@ -35,6 +30,26 @@ let RootC=component(()=>{
     history.replaceState(state.map(a=>a.slice(0,3)),'')
     setPageStack(state)
   }
+  useEffect(()=>{
+    history.replaceState(pageStack,'')
+  },[])
+  useEffect(function*(){
+    let f=e=>setPageStack(e.state)
+    addEventListener('popstate',f)
+    yield
+    removeEventListener('popstate',f)
+  },[])
+  return[pageStack,setStack,pushStack,popStack]
+}
+let RootC=component(()=>{
+  let style
+  ;[style,setStyle]=useState('dark')
+  let[bcr,setBcr]=useState([1,1])
+  let[pageStack,setStack,pushStack,popStack]=useHistoryStack(
+    [[crypto.randomUUID(),'RootPage']]
+  )
+  let[uploadTask,setUploadTask]=useState([])
+  let uploadManager=useRef(new UploadManager({setUploadTask}))
   useEffect(function*(){
     if(!uploadTask.length)
       return yield
@@ -46,15 +61,6 @@ let RootC=component(()=>{
     yield
     removeEventListener('beforeunload',f)
   },[!!uploadTask.length])
-  useEffect(()=>{
-    history.replaceState(pageStack,'')
-  },[])
-  useEffect(function*(){
-    let f=e=>setPageStack(e.state)
-    addEventListener('popstate',f)
-    yield
-    removeEventListener('popstate',f)
-  },[])
   useEffect(function*(){
     let f=()=>{
       let bcr=document.body.getBoundingClientRect()
@@ -94,121 +100,123 @@ let RootC=component(()=>{
     yield
     ab.abort()
   },[sessionCheck])
+  let[pageUuid,pageName,pageOption,pageSession]=pageStack[pageStack.length-1]
+  let page={
+    FolderPage:()=>FolderPage({
+      cutFolderItem:api.cutFolderItem,
+      folder:pageOption.folder,
+      folderItem:pageOption.folderItem,
+      folderItemName:pageOption.folderItemName,
+      goBack:popStack,
+      getFolderItemTabByFolder:api.getFolderItemTabByFolder,
+      goFolderPage:(folderItem,folderItemName,folder)=>
+        pushStack(['FolderPage',{folder,folderItem,folderItemName}]),
+      goMoveFolderPage:(folder,movingFolderItem)=>
+        pushStack(['MoveFolderPage',{folder,movingFolderItem,layer:0}]),
+      goNoteEditPage:note=>pushStack(['NoteEditPage',note]),
+      goSettingPage:()=>pushStack(['SettingPage']),
+      goUploadTaskPage:()=>pushStack(['UploadTaskPage']),
+      key:pageUuid,
+      me,
+      putBinaryArr:uploadManager.current.put.bind(uploadManager.current),
+      putFolder:api.putFolder,
+      putNote:async a=>{
+        let res=await api.putNote(a)
+        if(!(res.type=='ok'))
+          console.error(res)
+        pushStack(['NoteEditPage',res.note[0].note,{isNew:1}])
+      },
+      setFolderItemName:api.setFolderItemName,
+      uploading:!!uploadTask.length,
+    }),
+    MoveFolderPage:()=>FolderPage({
+      folder:pageOption.folder,
+      folderItem:pageOption.folderItem,
+      folderItemName:pageOption.folderItemName,
+      getFolderItemTabByFolder:api.getFolderItemTabByFolder,
+      goBack:popStack,
+      goFolderPage:(folderItem,folderItemName,folder)=>
+        pushStack(['MoveFolderPage',{
+          folder,
+          folderItem,
+          folderItemName,
+          layer:pageOption.layer+1,
+          movingFolderItem:pageOption.movingFolderItem,
+        }]),
+      goNoteEditPage:()=>{},
+      key:pageUuid,
+      me,
+      move:1,
+      movingFolderItem:pageOption.movingFolderItem,
+      onCancel:()=>{
+        history.go(-(pageOption.layer+1))
+      },
+      onMove:async()=>{
+        await api.setFolderItemFolder({
+          folder:pageOption.folder,
+          folderItem:pageOption.movingFolderItem,
+        })
+        history.go(-(pageOption.layer+1))
+      },
+    }),
+    NoteEditPage:()=>NoteEditPage({
+      cutNote:api.cutNote,
+      editingNote:pageOption,
+      getNoteByNote:api.getNoteByNote,
+      goBack:popStack,
+      key:pageUuid,
+      session:pageSession||{},
+      setNoteBody:api.setNote,
+    }),
+    RootPage:()=>RootPage({
+      goSettingPage:()=>pushStack(['SettingPage']),
+      key:pageUuid,
+    }),
+    SettingPage:()=>SettingPage({
+      goBack:popStack,
+      logIn:async(username,password)=>{
+        let res=await api.logIn({username,password})
+        if(res.type=='ok')
+          setSessionCheck(Symbol())
+        return res
+      },
+      logOut:async()=>{
+        let res=await api.logOut()
+        if(res.type=='ok')
+          setSessionCheck(Symbol())
+        return res
+      },
+      key:pageUuid,
+      me,
+      register:async(username,password)=>{
+        let res=await api.putUser({username,password})
+        if(res.type=='ok')
+          setSessionCheck(Symbol())
+        return res
+      },
+      setStyle:style=>{
+        serviceWorkerRegistration.active.postMessage({
+          type:'setStyle',
+          style,
+        })
+      },
+      style,
+    }),
+    UploadTaskPage:()=>UploadTaskPage({
+      cutTask:uploadManager.current.cut.bind(uploadManager.current),
+      goBack:popStack,
+      key:pageUuid,
+      me,
+      uploadTask,
+    }),
+  }[pageName]()
   return div({
     class:['root',style].join(' '),
     style:{
       '--zoom':Math.min(480,bcr[0]),
     },
   },
-    {
-      FolderPage:()=>FolderPage({
-        cutFolderItem:api.cutFolderItem,
-        folder:pageStack[pageStack.length-1][2].folder,
-        folderItem:pageStack[pageStack.length-1][2].folderItem,
-        folderItemName:pageStack[pageStack.length-1][2].folderItemName,
-        goBack:popStack,
-        getFolderItemTabByFolder:api.getFolderItemTabByFolder,
-        goFolderPage:(folderItem,folderItemName,folder)=>
-          pushStack([crypto.randomUUID(),'FolderPage',{folder,folderItem,folderItemName}]),
-        goMoveFolderPage:(folder,movingFolderItem)=>
-          pushStack([crypto.randomUUID(),'MoveFolderPage',{folder,movingFolderItem,layer:0}]),
-        goNoteEditPage:note=>pushStack([crypto.randomUUID(),'NoteEditPage',note]),
-        goSettingPage:()=>pushStack([crypto.randomUUID(),'SettingPage']),
-        goUploadTaskPage:()=>pushStack([crypto.randomUUID(),'UploadTaskPage']),
-        key:pageStack[pageStack.length-1][0],
-        me,
-        putBinaryArr:uploadManager.current.put.bind(uploadManager.current),
-        putFolder:api.putFolder,
-        putNote:async a=>{
-          let res=await api.putNote(a)
-          if(!(res.type=='ok'))
-            console.error(res)
-          pushStack([crypto.randomUUID(),'NoteEditPage',res.note[0].note,{isNew:1}])
-        },
-        setFolderItemName:api.setFolderItemName,
-        uploading:!!uploadTask.length,
-      }),
-      MoveFolderPage:()=>FolderPage({
-        folder:pageStack[pageStack.length-1][2].folder,
-        folderItem:pageStack[pageStack.length-1][2].folderItem,
-        folderItemName:pageStack[pageStack.length-1][2].folderItemName,
-        getFolderItemTabByFolder:api.getFolderItemTabByFolder,
-        goBack:popStack,
-        goFolderPage:(folderItem,folderItemName,folder)=>
-          pushStack([crypto.randomUUID(),'MoveFolderPage',{
-            folder,
-            folderItem,
-            folderItemName,
-            layer:pageStack[pageStack.length-1][2].layer+1,
-            movingFolderItem:pageStack[pageStack.length-1][2].movingFolderItem,
-          }]),
-        goNoteEditPage:()=>{},
-        key:pageStack[pageStack.length-1][0],
-        me,
-        move:1,
-        movingFolderItem:pageStack[pageStack.length-1][2].movingFolderItem,
-        onCancel:()=>{
-          history.go(-(pageStack[pageStack.length-1][2].layer+1))
-        },
-        onMove:async()=>{
-          await api.setFolderItemFolder({
-            folder:pageStack[pageStack.length-1][2].folder,
-            folderItem:pageStack[pageStack.length-1][2].movingFolderItem,
-          })
-          history.go(-(pageStack[pageStack.length-1][2].layer+1))
-        },
-      }),
-      NoteEditPage:()=>NoteEditPage({
-        cutNote:api.cutNote,
-        editingNote:pageStack[pageStack.length-1][2],
-        getNoteByNote:api.getNoteByNote,
-        goBack:popStack,
-        key:pageStack[pageStack.length-1][0],
-        session:pageStack[pageStack.length-1][3]||{},
-        setNoteBody:api.setNote,
-      }),
-      RootPage:()=>RootPage({
-        goSettingPage:()=>pushStack([crypto.randomUUID(),'SettingPage']),
-        key:pageStack[pageStack.length-1][0],
-      }),
-      SettingPage:()=>SettingPage({
-        goBack:popStack,
-        logIn:async(username,password)=>{
-          let res=await api.logIn({username,password})
-          if(res.type=='ok')
-            setSessionCheck(Symbol())
-          return res
-        },
-        logOut:async()=>{
-          let res=await api.logOut()
-          if(res.type=='ok')
-            setSessionCheck(Symbol())
-          return res
-        },
-        key:pageStack[pageStack.length-1][0],
-        me,
-        register:async(username,password)=>{
-          let res=await api.putUser({username,password})
-          if(res.type=='ok')
-            setSessionCheck(Symbol())
-          return res
-        },
-        setStyle:style=>{
-          serviceWorkerRegistration.active.postMessage({
-            type:'setStyle',
-            style,
-          })
-        },
-        style,
-      }),
-      UploadTaskPage:()=>UploadTaskPage({
-        cutTask:uploadManager.current.cut.bind(uploadManager.current),
-        goBack:popStack,
-        key:pageStack[pageStack.length-1][0],
-        me,
-        uploadTask,
-      }),
-    }[pageStack[pageStack.length-1][1]](),
+    page,
   )
 })
 ;(async()=>{
