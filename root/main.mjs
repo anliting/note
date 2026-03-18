@@ -1,4 +1,6 @@
-import{$tn,Root,component,dom,useEffect,useRef,useState}from'concept'
+import{
+  $tn,Root,component,dom,useCallback,useEffect,useRef,useState
+}from'concept'
 import NoteEditPage from    './NoteEditPage/main.mjs'
 import RootPage from        './RootPage/main.mjs'
 import FolderPage from      './FolderPage/main.mjs'
@@ -14,10 +16,6 @@ navigator.serviceWorker.addEventListener('message',e=>{
 })
 let useHistoryStack=(defaultPage)=>{
   let[pageStack,setPageStack]=useState(history.state||defaultPage)
-  let setStack=stack=>{
-    history.replaceState(stack.map(a=>a.slice(0,3)),'')
-    setPageStack(stack)
-  }
   let pushStack=a=>{
     let state=[...pageStack,[crypto.randomUUID(),...a]]
     history.pushState(state.map(a=>a.slice(0,3)),'')
@@ -39,8 +37,16 @@ let useHistoryStack=(defaultPage)=>{
     yield
     removeEventListener('popstate',f)
   },[])
-  return[pageStack,setStack,pushStack,popStack]
+  return[
+    pageStack,
+    useCallback(stack=>{
+      history.replaceState(stack.map(a=>a.slice(0,3)),'')
+      setPageStack(stack)
+    },[setPageStack]),
+    pushStack,popStack
+  ]
 }
+//let a
 let RootC=component(()=>{
   let style
   ;[style,setStyle]=useState('dark')
@@ -48,6 +54,8 @@ let RootC=component(()=>{
   let[pageStack,setStack,pushStack,popStack]=useHistoryStack(
     [[crypto.randomUUID(),'RootPage']]
   )
+  //console.log(pushStack==a)
+  //a=pushStack
   let[uploadTask,setUploadTask]=useState([])
   let uploadManager=useRef(new UploadManager({setUploadTask}))
   useEffect(function*(){
