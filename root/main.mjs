@@ -46,7 +46,6 @@ let useHistoryStack=(defaultPage)=>{
     pushStack,popStack
   ]
 }
-//let a
 let RootC=component(()=>{
   let style
   ;[style,setStyle]=useState('dark')
@@ -54,8 +53,6 @@ let RootC=component(()=>{
   let[pageStack,setStack,pushStack,popStack]=useHistoryStack(
     [[crypto.randomUUID(),'RootPage']]
   )
-  //console.log(pushStack==a)
-  //a=pushStack
   let[uploadTask,setUploadTask]=useState([])
   let uploadManager=useRef(new UploadManager({setUploadTask}))
   useEffect(function*(){
