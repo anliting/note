@@ -1,5 +1,5 @@
 import{
-  $tn,component,dom,useEffect,useRef,useState
+  component,dom,useEffect,useRef,useState
 }from'concept'
 import ContextMenu from '../ContextMenu/main.mjs'
 import TopBar from      '../TopBar/main.mjs'
@@ -311,5 +311,5 @@ export default component(({
         folderInputRef.current.click()
       }],*/
     ):[],
-  ):$tn()
+  ):''
 })

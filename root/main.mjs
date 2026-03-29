@@ -1,5 +1,5 @@
 import{
-  $tn,Root,component,dom,useCallback,useEffect,useRef,useState
+  Root,component,dom,useCallback,useEffect,useRef,useState
 }from'concept'
 import NoteEditPage from    './NoteEditPage/main.mjs'
 import RootPage from        './RootPage/main.mjs'
@@ -225,7 +225,7 @@ let RootC=component(()=>{
   )
 })
 ;(async()=>{
-  let root=new Root($tn({}))
+  let root=new Root
   document.body.appendChild(root.node)
   root.render(RootC({}))
   navigator.serviceWorker.register('%23sw')

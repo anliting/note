@@ -1,5 +1,5 @@
 import{
-  $tn,component,dom,useRef,
+  component,dom,useRef,
 }from'concept'
 import TopBar from          '../TopBar/main.mjs'
 import UploadTaskItem from  './UploadTaskItem/main.mjs'
@@ -42,5 +42,5 @@ export default component(({
         })
       ),
     ),
-  ):$tn()
+  ):''
 })

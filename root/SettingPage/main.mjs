@@ -1,4 +1,4 @@
-import{$fragment,component,dom,useState}from'concept'
+import{component,dom,useState}from'concept'
 import TopBar from        '../TopBar/main.mjs'
 let{button,div,input,option,select}=dom
 let LogIn=component(({logIn})=>{
@@ -16,7 +16,7 @@ let LogIn=component(({logIn})=>{
     else
       alert('Unknown error.')
   }
-  return $fragment({},
+  return[
     div({
       class:'title',
     },'Log In'),
@@ -39,7 +39,7 @@ let LogIn=component(({logIn})=>{
       class:'typeA',
       onclick:tryLogIn,
     },'Log In'),
-  )
+  ]
 })
 let Register=component(({register})=>{
   let[username,setUsername]=useState('')
@@ -62,7 +62,7 @@ let Register=component(({register})=>{
     else
       alert('Unknown error.')
   }
-  return $fragment({},
+  return[
     div({
       class:'title',
     },'Register'),
@@ -93,7 +93,7 @@ let Register=component(({register})=>{
       class:'typeA',
       onclick:tryRegister,
     },'Register'),
-  )
+  ]
 })
 export default component(({
   goBack,
