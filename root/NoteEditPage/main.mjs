@@ -67,7 +67,7 @@ export default component(({
       leftIcon:'\ue2ea',
       onLeftClick:goBack,
     },
-      noteRow?[
+      !!noteRow&&[
         button({
           class:[
             'wrap',
@@ -99,12 +99,12 @@ export default component(({
         },
           '\ue161',
         ),
-      ]:[],
+      ],
     ),
     div({
       class:'main',
     },
-      noteRow?Textarea({
+      !!noteRow&&Textarea({
         key:noteRow.note,
         ref:textareaRef,
         class:[
@@ -122,7 +122,7 @@ export default component(({
           e.stopPropagation()
           set()
         },
-      }):[],
+      }),
     ),
   )
 })

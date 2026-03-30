@@ -31,9 +31,9 @@ export default component(({
   let[folderItemTab,setFolderItemTab]=useState([])
   let[folderItemTabT,setFolderItemTabT]=useState(Symbol())
   let[selectedFolderItem,setSelectedFolderItem]=useState(null)
-  let[dropzone,setDropzone]=useState()
+  let[dropzone,setDropzone]=useState(false)
   let[folderItemMenu,setFolderItemMenu]=useState(null)
-  let[addMenu,setAddMenu]=useState(null)
+  let[addMenu,setAddMenu]=useState(false)
   let pageRef=useRef()
   let folderInputRef=useRef()
   useEffect(()=>{
@@ -83,7 +83,7 @@ export default component(({
     }else if(folderItemRow.fileType=='note')
       goNoteEditPage(folderItemRow.file)
   }
-  return me?div({
+  return me&&div({
     class:'folderPage',
     ref:pageRef,
     tabindex:'0',
@@ -181,17 +181,17 @@ export default component(({
           onLeftClick:goBack,
           title:folderItemName||'',
         },
-          uploading?button({
+          uploading&&button({
             class:'right uploading material-symbols-sharp',
             onclick:goUploadTaskPage,
           },
             '\ue2c3',
-          ):[],
+          ),
         )
       ,
       div({
         class:'main',
-        ondragenter:()=>setDropzone(1),
+        ondragenter:()=>setDropzone(true),
       },
         folderItemTab.map(folderItemRow=>
           FolderItem({
@@ -226,15 +226,15 @@ export default component(({
       ):button({
         class:'add material-symbols-sharp',
         onclick:()=>{
-          setAddMenu(1)
+          setAddMenu(true)
         },
       },
         '\ue145',
       ),
     ),
-    dropzone?div({
+    dropzone&&div({
       class:'dropzone material-symbols-sharp',
-      ondragleave:()=>setDropzone(),
+      ondragleave:()=>setDropzone(false),
       ondragover:e=>e.preventDefault(),
       ondrop:e=>{
         e.preventDefault()
@@ -243,12 +243,12 @@ export default component(({
           folder,
           setFolderItemTabT,
         })
-        setDropzone()
+        setDropzone(false)
       },
     },
       '\ue2c3',
-    ):[],
-    folderItemMenu?ContextMenu({
+    ),
+    !!folderItemMenu&&ContextMenu({
       onClick:()=>{
         setFolderItemMenu(null)
       },
@@ -279,10 +279,10 @@ export default component(({
         })
         setFolderItemTabT(Symbol())
       }],
-    ):[],
-    addMenu?ContextMenu({
+    ),
+    addMenu&&ContextMenu({
       onClick:()=>{
-        setAddMenu(null)
+        setAddMenu(false)
       },
     },
       ['\ue2cc','Folder',async()=>{
@@ -310,6 +310,6 @@ export default component(({
       /*['\ue9a3','Upload Folder',()=>{
         folderInputRef.current.click()
       }],*/
-    ):[],
-  ):''
+    ),
+  )
 })

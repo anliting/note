@@ -18,7 +18,7 @@ export default component(({
     total:100*1e12,
   }]*/
   let weakMap=useRef(new WeakMap)
-  return me?div({
+  return me&&div({
     class:'uploadTaskPage',
   },
     TopBar({
@@ -42,5 +42,5 @@ export default component(({
         })
       ),
     ),
-  ):''
+  )
 })

@@ -227,7 +227,7 @@ let RootC=component(()=>{
 ;(async()=>{
   let root=new Root
   document.body.appendChild(root.node)
-  root.render(RootC({}))
+  root.render(RootC())
   navigator.serviceWorker.register('%23sw')
   serviceWorkerRegistration=await navigator.serviceWorker.ready
   serviceWorkerRegistration.active.postMessage({type:'getStyle'})

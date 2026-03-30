@@ -5,7 +5,7 @@ export default({onClick,},...child)=>div({
   onclick:onClick,
 },
   div(
-    ...child.map(([icon,text,onclick])=>
+    child.map(([icon,text,onclick])=>
       div({onclick},
         span({class:'material-symbols-sharp'},icon),
         text,
