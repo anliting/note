@@ -15,7 +15,8 @@ let allowedMimeSet=new Set([
   'image/heif',
   'image/jpeg',
   'image/png',
-  'image/svg+xml',
+// image/svg+xml is excluded: SVG can contain scripts; serving it inline on
+// this origin would allow stored XSS with full API access.
   'image/tiff',
   'image/vnd.microsoft.icon',
   'image/webp',
