@@ -29,7 +29,6 @@ export default getSessionKey(async({db,reply,rq,rs,sk})=>{
           folder,fileName,
           ws=fs.createWriteStream(`bin/${binary}`,{flush:true}),
           wsClose=new Promise((rs,rj)=>ws.on('error',rj).on('close',rs))
-        wsClose.catch(()=>{})
         let fileWs
         try{
           let bb
