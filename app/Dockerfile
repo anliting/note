@@ -24,4 +24,10 @@ COPY --from=0 /app1/node_modules node_modules
 COPY favicon favicon
 COPY app/app app
 COPY --from=0 /app/build build
+# --unhandled-rejections=none: Node's unhandled-rejection detection is
+# considered broken by design. Promises are used precisely because one does not
+# know in which event-loop cycle a task gets rejected or awaited, yet Node
+# demands a handler be attached within the cycle right after the rejection
+# (e.g. a promise created now and awaited later would kill the process if it
+# rejects early).
 CMD ["node","--unhandled-rejections=none","app/main.mjs"]
