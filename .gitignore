@@ -1,4 +1,5 @@
 /.env
 /__1-key.pem
 /__1.pem
+/compose.override.yml
 /dump.sql
