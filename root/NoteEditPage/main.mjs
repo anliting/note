@@ -27,6 +27,7 @@ export default component(({
   let[noteT,setNoteT]=useState(firstNoteT)
   let[text,setText]=useState('')
   let[wrap,setWrap]=useState(true)
+  let[dirty,setDirty]=useState(false)
   let textareaRef=useRef()
   useEffect(()=>{
     if(isNew&&firstNoteT==noteT&&textareaRef.current)
@@ -41,6 +42,7 @@ export default component(({
           throw new DOMException('','AbortError')
         if(res.type=='ok'){
           setText(noteBodyText(res.note[0].noteBody))
+          setDirty(false)
           setNoteRow(res.note[0])
         }else
           throw res
@@ -59,6 +61,7 @@ export default component(({
       text,
     })})
     setNoteT(Symbol())
+    setDirty(false)
   }
   return div({
     class:'noteEditPage',
@@ -93,7 +96,7 @@ export default component(({
           class:[
             'save',
             'material-symbols-sharp',
-            text==noteBodyText(noteRow.noteBody)?'saved':'',
+            dirty?'':'saved',
           ].join(' '),
           onclick:set,
         },
@@ -112,7 +115,10 @@ export default component(({
           wrap?'wrap':'',
         ].join(' '),
         defaultValue:text,
-        oninput:e=>setText(e.target.value),
+        oninput:e=>{
+          setDirty(true)
+          setText(e.target.value)
+        },
         onkeydown:e=>{
           if(!(
             e.ctrlKey&&e.key.toLowerCase()=='s'
