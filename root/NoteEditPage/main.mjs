@@ -1,18 +1,7 @@
 import{component,dom,useEffect,useRef,useState}from 'concept'
+import NoteEdit from      './NoteEdit/main.mjs'
 import TopBar from        '../TopBar/main.mjs'
-let{button,div,textarea}=dom
-let Textarea=component(({defaultValue,ref,...prop})=>{
-  ref=(newRef=>ref||newRef)(useRef())
-  useEffect(()=>{
-    ref.current.value=defaultValue
-  },[])
-  return textarea({
-    ref,
-    ...prop,
-  })
-})
-let noteBodyText=noteBody=>
-  (noteBody=>noteBody.type?noteBody.text:'')(JSON.parse(noteBody))
+let{button,div}=dom
 export default component(({
   cutNote,
   editingNote,
@@ -22,16 +11,15 @@ export default component(({
   session:{isNew},
   setNoteBody,
 })=>{
-  let[noteRow,setNoteRow]=useState()
-  let[firstNoteT,setFirstNoteT]=useState(Symbol())
+  let firstNoteT=useState(Symbol())[0]
   let[noteT,setNoteT]=useState(firstNoteT)
-  let[text,setText]=useState('')
+  let[noteRow,setNoteRow]=useState()
   let[wrap,setWrap]=useState(true)
   let[dirty,setDirty]=useState(false)
-  let textareaRef=useRef()
+  let noteEditRef=useRef()
   useEffect(()=>{
-    if(isNew&&firstNoteT==noteT&&textareaRef.current)
-      textareaRef.current.focus()
+    if(isNew&&firstNoteT==noteT&&noteEditRef.current)
+      noteEditRef.current.focus()
   },[firstNoteT,isNew,noteRow,noteT])
   useEffect(function*(){
     let ab=new AbortController
@@ -41,7 +29,6 @@ export default component(({
         if(ab.signal.aborted)
           throw new DOMException('','AbortError')
         if(res.type=='ok'){
-          setText(noteBodyText(res.note[0].noteBody))
           setDirty(false)
           setNoteRow(res.note[0])
         }else
@@ -56,10 +43,13 @@ export default component(({
     ab.abort()
   },[noteT])
   let set=async()=>{
-    await setNoteBody({note:editingNote,noteBody:JSON.stringify({
-      type:'text',
-      text,
-    })})
+    await setNoteBody({
+      note:editingNote,
+      noteBody:noteEditRef.current?
+        noteEditRef.current.value
+      :
+        noteRow.noteBody
+    })
     setNoteT(Symbol())
     setDirty(false)
   }
@@ -107,18 +97,15 @@ export default component(({
     div({
       class:'main',
     },
-      !!noteRow&&Textarea({
+      !!noteRow&&NoteEdit({
         key:noteRow.note,
-        ref:textareaRef,
+        ref:noteEditRef,
         class:[
-          'textarea',
+          'noteEdit',
           wrap?'wrap':'',
         ].join(' '),
-        defaultValue:text,
-        oninput:e=>{
-          setDirty(true)
-          setText(e.target.value)
-        },
+        defaultValue:noteRow.noteBody,
+        oninput:()=>setDirty(true),
         onkeydown:e=>{
           if(!(
             e.ctrlKey&&e.key.toLowerCase()=='s'

@@ -1,10 +1,3 @@
-.root textarea{
-  border:0;
-  padding:0;
-  outline:none;
-  resize:none;
-  background:none;
-}
 .root>.noteEditPage{
   position:relative;
   margin:0 auto;
@@ -35,21 +28,16 @@
   padding-bottom:0;
   display:flex;
 }
-.root>.noteEditPage textarea{
-  box-sizing:border-box;
-  width:calc(var(--zoom)*1px);
-  aspect-ratio:2/1;
-  white-space:pre;
+.root>.noteEditPage .noteEdit{
+  width:100%;
   font-size:calc(.05*var(--zoom)*1px);
   padding:calc(0.04*var(--zoom)*1px);
+  overflow:auto;
+  line-height:1.5;
+  font-family:monospace;
+  white-space:pre;
 }
-.root>.noteEditPage textarea.wrap{
+.root>.noteEditPage .noteEdit.wrap{
   white-space:pre-wrap;
   word-break:break-all;
-}
-.root.dark>.noteEditPage textarea{
-  color:#fff;
-}
-.root.light>.noteEditPage textarea{
-  color:#000;
 }
