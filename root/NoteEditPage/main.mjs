@@ -1,6 +1,6 @@
 import{component,dom,useEffect,useRef,useState}from 'concept'
-import NoteEdit from      './NoteEdit/main.mjs'
 import TopBar from        '../TopBar/main.mjs'
+import NoteEdit from      './NoteEdit/main.mjs'
 let{button,div}=dom
 export default component(({
   cutNote,
