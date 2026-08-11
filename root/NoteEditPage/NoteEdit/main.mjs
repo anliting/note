@@ -56,8 +56,7 @@ export default component(({defaultValue,ref,...prop})=>{
     onbeforeinput:e=>{
       if(['insertParagraph','insertLineBreak'].includes(e.inputType)){
         e.preventDefault()
-        let el=e.currentTarget
-        normalizeTrailingNewline(el)
+        normalizeTrailingNewline(e.currentTarget)
         replaceSelection('\n')
         scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
@@ -71,8 +70,7 @@ export default component(({defaultValue,ref,...prop})=>{
       e.preventDefault()
       let text=e.clipboardData.getData('text/plain').replace(/\r\n?/g,'\n')
       if(text){
-        let el=e.currentTarget
-        normalizeTrailingNewline(el)
+        normalizeTrailingNewline(e.currentTarget)
         replaceSelection(text)
         scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
