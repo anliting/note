@@ -57,7 +57,7 @@ apiMap.putNote=getSessionKey(async({db,message,reply,sk})=>{
       from"a","b"
     )
     insert into"note"("note","noteBody")
-    select"file",'{}'
+    select"file",'{"type":"list","list":[]}'
     from"b"
     returning"note","noteT","noteBody"
   `,[sk,message.folder])

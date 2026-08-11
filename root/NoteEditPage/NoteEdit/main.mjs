@@ -1,7 +1,9 @@
-import{component,dom,useEffect,useRef}from 'concept'
-let{div}=dom
 let noteBodyText=noteBody=>
-  (noteBody=>noteBody.type?noteBody.text:'')(JSON.parse(noteBody))
+  (noteBody=>noteBody.type=='list'?
+    noteBody.list.map(item=>item.text).join('')
+  :
+    ''
+  )(JSON.parse(noteBody))
 let scrollCaretIntoView=()=>{
   let sel=getSelection()
   if(!sel.rangeCount)
@@ -31,32 +33,16 @@ let replaceSelection=text=>{
   sel.removeAllRanges()
   sel.addRange(r)
 }
-export default component(({defaultValue,ref,...prop})=>{
-  let divRef=useRef()
-  ref=(newRef=>ref||newRef)(useRef())
-  ref.current={
-    focus(){
-      if(divRef.current)
-        divRef.current.focus()
-    },
-    get value(){
-      return divRef.current?JSON.stringify({
-        type:'text',
-        text:divRef.current.textContent,
-      }):defaultValue
-    },
-  }
-  useEffect(()=>{
-    divRef.current.textContent=noteBodyText(defaultValue)
-  },[])
-  return div({
-    ref:divRef,
-    contenteditable:'true',
-    tabindex:'-1',
-    onbeforeinput:e=>{
+export default class{
+  constructor(noteBody){
+    let el=this.element=document.createElement('div')
+    el.contentEditable='true'
+    el.tabIndex=-1
+    el.textContent=noteBodyText(noteBody)
+    el.onbeforeinput=e=>{
       if(['insertParagraph','insertLineBreak'].includes(e.inputType)){
         e.preventDefault()
-        normalizeTrailingNewline(e.currentTarget)
+        normalizeTrailingNewline(el)
         replaceSelection('\n')
         scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
@@ -65,12 +51,12 @@ export default component(({defaultValue,ref,...prop})=>{
           inputType:'insertText',
         }))
       }
-    },
-    onpaste:e=>{
+    }
+    el.onpaste=e=>{
       e.preventDefault()
       let text=e.clipboardData.getData('text/plain').replace(/\r\n?/g,'\n')
       if(text){
-        normalizeTrailingNewline(e.currentTarget)
+        normalizeTrailingNewline(el)
         replaceSelection(text)
         scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
@@ -79,7 +65,18 @@ export default component(({defaultValue,ref,...prop})=>{
           inputType:'insertFromPaste',
         }))
       }
-    },
-    ...prop,
-  })
-})
+    }
+  }
+  focus(){
+    this.element.focus()
+  }
+  get value(){
+    return JSON.stringify({
+      type:'list',
+      list:[{
+        type:'text',
+        text:this.element.textContent,
+      }],
+    })
+  }
+}

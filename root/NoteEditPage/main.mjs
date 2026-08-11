@@ -1,8 +1,8 @@
-import{component,dom,useEffect,useRef,useState}from 'concept'
+import{component,dom,useEffect,useMemo,useRef,useState}from 'concept'
 import TopBar from        '../TopBar/main.mjs'
 import NoteEdit from      './NoteEdit/main.mjs'
 let{button,div}=dom
-export default component(({
+let NoteEditPage=component(({
   cutNote,
   editingNote,
   getNoteByNote,
@@ -16,11 +16,48 @@ export default component(({
   let[noteRow,setNoteRow]=useState()
   let[wrap,setWrap]=useState(true)
   let[dirty,setDirty]=useState(false)
-  let noteEditRef=useRef()
+  let mainRef=useRef()
+  let noteEdit=useMemo(
+    ()=>noteRow&&new NoteEdit(noteRow.noteBody),
+    [noteRow&&noteRow.note],
+  )
+  let set=async()=>{
+    await setNoteBody({
+      note:editingNote,
+      noteBody:noteEdit.value,
+    })
+    setNoteT(Symbol())
+    setDirty(false)
+  }
+  useEffect(function*(){
+    if(noteEdit){
+      noteEdit.element.oninput=()=>setDirty(true)
+      noteEdit.element.onkeydown=e=>{
+        if(!(
+          e.ctrlKey&&e.key.toLowerCase()=='s'
+        ))
+          return
+        e.preventDefault()
+        e.stopPropagation()
+        set()
+      }
+      mainRef.current.append(noteEdit.element)
+    }
+    yield
+    if(noteEdit)
+      noteEdit.element.remove()
+  },[noteEdit])
   useEffect(()=>{
-    if(isNew&&firstNoteT==noteT&&noteEditRef.current)
-      noteEditRef.current.focus()
-  },[firstNoteT,isNew,noteRow,noteT])
+    if(noteEdit)
+      noteEdit.element.className=[
+        'noteEdit',
+        wrap?'wrap':'',
+      ].join(' ')
+  },[noteEdit,wrap])
+  useEffect(()=>{
+    if(isNew&&firstNoteT==noteT&&noteEdit)
+      noteEdit.focus()
+  },[firstNoteT,isNew,noteEdit,noteT])
   useEffect(function*(){
     let ab=new AbortController
     ;(async()=>{
@@ -42,17 +79,6 @@ export default component(({
     yield
     ab.abort()
   },[noteT])
-  let set=async()=>{
-    await setNoteBody({
-      note:editingNote,
-      noteBody:noteEditRef.current?
-        noteEditRef.current.value
-      :
-        noteRow.noteBody
-    })
-    setNoteT(Symbol())
-    setDirty(false)
-  }
   return div({
     class:'noteEditPage',
   },
@@ -96,26 +122,8 @@ export default component(({
     ),
     div({
       class:'main',
-    },
-      !!noteRow&&NoteEdit({
-        key:noteRow.note,
-        ref:noteEditRef,
-        class:[
-          'noteEdit',
-          wrap?'wrap':'',
-        ].join(' '),
-        defaultValue:noteRow.noteBody,
-        oninput:()=>setDirty(true),
-        onkeydown:e=>{
-          if(!(
-            e.ctrlKey&&e.key.toLowerCase()=='s'
-          ))
-            return
-          e.preventDefault()
-          e.stopPropagation()
-          set()
-        },
-      }),
-    ),
+      ref:mainRef,
+    }),
   )
 })
+export default component(prop=>[NoteEditPage({...prop,key:prop.editingNote})])
