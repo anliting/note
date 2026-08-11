@@ -32,6 +32,7 @@
   width:100%;
   font-size:calc(.05*var(--zoom)*1px);
   padding:calc(0.04*var(--zoom)*1px);
+  scroll-padding:calc(0.04*var(--zoom)*1px);
   overflow:auto;
   line-height:1.5;
   font-family:monospace;

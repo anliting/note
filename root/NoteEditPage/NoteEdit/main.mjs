@@ -2,37 +2,15 @@ import{component,dom,useEffect,useRef}from 'concept'
 let{div}=dom
 let noteBodyText=noteBody=>
   (noteBody=>noteBody.type?noteBody.text:'')(JSON.parse(noteBody))
-// By Claude
-let scrollCaretIntoView=el=>{
+let scrollCaretIntoView=()=>{
   let sel=getSelection()
   if(!sel.rangeCount)
     return
   let r=sel.getRangeAt(0).cloneRange()
-  let rect=r.getClientRects()[0]
-  if(!rect){
-    let probe=new Text('\u200b')
-    r.insertNode(probe)
-    r.selectNode(probe)
-    rect=r.getClientRects()[0]
-    probe.remove()
-  }
-  if(!rect)
-    return
-  let b=el.getBoundingClientRect()
-  let c={
-    top:b.top+el.clientTop,
-    left:b.left+el.clientLeft,
-  }
-  c.bottom=c.top+el.clientHeight
-  c.right=c.left+el.clientWidth
-  if(rect.bottom>c.bottom)
-    el.scrollTop+=rect.bottom-c.bottom
-  else if(rect.top<c.top)
-    el.scrollTop-=c.top-rect.top
-  if(rect.right>c.right)
-    el.scrollLeft+=rect.right-c.right
-  else if(rect.left<c.left)
-    el.scrollLeft-=c.left-rect.left
+  let probe=document.createElement('span')
+  r.insertNode(probe)
+  probe.scrollIntoView({block:'nearest',inline:'nearest'})
+  probe.remove()
 }
 let normalizeTrailingNewline=el=>{
   let r=getSelection().getRangeAt(0)
@@ -80,7 +58,7 @@ export default component(({defaultValue,ref,...prop})=>{
         let el=e.currentTarget
         normalizeTrailingNewline(el)
         replaceSelection('\n')
-        scrollCaretIntoView(el)
+        scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
           bubbles:true,
           data:'\n',
@@ -95,7 +73,7 @@ export default component(({defaultValue,ref,...prop})=>{
         let el=e.currentTarget
         normalizeTrailingNewline(el)
         replaceSelection(text)
-        scrollCaretIntoView(el)
+        scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
           bubbles:true,
           data:text,
