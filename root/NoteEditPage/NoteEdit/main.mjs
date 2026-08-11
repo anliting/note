@@ -34,6 +34,24 @@ let scrollCaretIntoView=el=>{
   else if(rect.left<c.left)
     el.scrollLeft-=c.left-rect.left
 }
+let normalizeTrailingNewline=el=>{
+  let r=getSelection().getRangeAt(0)
+  let rest=document.createRange()
+  rest.setStart(r.endContainer,r.endOffset)
+  rest.setEnd(el,el.childNodes.length)
+  if(rest.toString()=='')
+    el.append('\n')
+}
+let replaceSelection=text=>{
+  let sel=getSelection(),r=sel.getRangeAt(0)
+  r.deleteContents()
+  let t=new Text(text)
+  r.insertNode(t)
+  r.setStartAfter(t)
+  r.collapse(true)
+  sel.removeAllRanges()
+  sel.addRange(r)
+}
 export default component(({defaultValue,ref,...prop})=>{
   let divRef=useRef()
   ref=(newRef=>ref||newRef)(useRef())
@@ -60,19 +78,8 @@ export default component(({defaultValue,ref,...prop})=>{
       if(['insertParagraph','insertLineBreak'].includes(e.inputType)){
         e.preventDefault()
         let el=e.currentTarget
-        let sel=getSelection(),r=sel.getRangeAt(0)
-        let rest=document.createRange()
-        rest.setStart(r.endContainer,r.endOffset)
-        rest.setEnd(el,el.childNodes.length)
-        if(rest.toString()=='')
-          el.append('\n')
-        r.deleteContents()
-        let t=new Text('\n')
-        r.insertNode(t)
-        r.setStartAfter(t)
-        r.collapse(true)
-        sel.removeAllRanges()
-        sel.addRange(r)
+        normalizeTrailingNewline(el)
+        replaceSelection('\n')
         scrollCaretIntoView(el)
         e.target.dispatchEvent(new InputEvent('input',{
           bubbles:true,
@@ -84,28 +91,17 @@ export default component(({defaultValue,ref,...prop})=>{
     onpaste:e=>{
       e.preventDefault()
       let text=e.clipboardData.getData('text/plain').replace(/\r\n?/g,'\n')
-      if(!text)
-        return
-      let el=e.currentTarget
-      let sel=getSelection(),r=sel.getRangeAt(0)
-      let rest=document.createRange()
-      rest.setStart(r.endContainer,r.endOffset)
-      rest.setEnd(el,el.childNodes.length)
-      if(rest.toString()=='')
-        el.append('\n')
-      r.deleteContents()
-      let t=new Text(text)
-      r.insertNode(t)
-      r.setStartAfter(t)
-      r.collapse(true)
-      sel.removeAllRanges()
-      sel.addRange(r)
-      scrollCaretIntoView(el)
-      e.target.dispatchEvent(new InputEvent('input',{
-        bubbles:true,
-        data:text,
-        inputType:'insertFromPaste',
-      }))
+      if(text){
+        let el=e.currentTarget
+        normalizeTrailingNewline(el)
+        replaceSelection(text)
+        scrollCaretIntoView(el)
+        e.target.dispatchEvent(new InputEvent('input',{
+          bubbles:true,
+          data:text,
+          inputType:'insertFromPaste',
+        }))
+      }
     },
     ...prop,
   })
