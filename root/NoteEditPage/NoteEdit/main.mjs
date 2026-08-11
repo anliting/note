@@ -2,15 +2,37 @@ import{component,dom,useEffect,useRef}from 'concept'
 let{div}=dom
 let noteBodyText=noteBody=>
   (noteBody=>noteBody.type?noteBody.text:'')(JSON.parse(noteBody))
-let scrollCaretIntoView=()=>{
+let scrollCaretIntoView=el=>{
   let sel=getSelection()
   if(!sel.rangeCount)
     return
   let r=sel.getRangeAt(0).cloneRange()
-  let probe=document.createElement('span')
-  r.insertNode(probe)
-  probe.scrollIntoView({block:'nearest',inline:'nearest'})
-  probe.remove()
+  let rect=r.getClientRects()[0]
+  if(!rect){
+    let probe=new Text('\u200b')
+    r.insertNode(probe)
+    r.selectNode(probe)
+    rect=r.getClientRects()[0]
+    probe.remove()
+  }
+  if(!rect)
+    return
+  let border=el.getBoundingClientRect()
+  let cs=getComputedStyle(el)
+  let visible={
+    top:border.top+el.clientTop+parseFloat(cs.paddingTop),
+    left:border.left+el.clientLeft+parseFloat(cs.paddingLeft),
+  }
+  visible.bottom=border.top+el.clientTop+el.clientHeight-parseFloat(cs.paddingBottom)
+  visible.right=border.left+el.clientLeft+el.clientWidth-parseFloat(cs.paddingRight)
+  if(rect.bottom>visible.bottom)
+    el.scrollTop+=rect.bottom-visible.bottom
+  else if(rect.top<visible.top)
+    el.scrollTop-=visible.top-rect.top
+  if(rect.right>visible.right)
+    el.scrollLeft+=rect.right-visible.right
+  else if(rect.left<visible.left)
+    el.scrollLeft-=visible.left-rect.left
 }
 let normalizeTrailingNewline=el=>{
   let r=getSelection().getRangeAt(0)
@@ -58,7 +80,7 @@ export default component(({defaultValue,ref,...prop})=>{
         let el=e.currentTarget
         normalizeTrailingNewline(el)
         replaceSelection('\n')
-        scrollCaretIntoView()
+        scrollCaretIntoView(el)
         e.target.dispatchEvent(new InputEvent('input',{
           bubbles:true,
           data:'\n',
@@ -73,7 +95,7 @@ export default component(({defaultValue,ref,...prop})=>{
         let el=e.currentTarget
         normalizeTrailingNewline(el)
         replaceSelection(text)
-        scrollCaretIntoView()
+        scrollCaretIntoView(el)
         e.target.dispatchEvent(new InputEvent('input',{
           bubbles:true,
           data:text,
