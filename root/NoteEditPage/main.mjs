@@ -30,22 +30,12 @@ let NoteEditPage=component(({
     setDirty(false)
   }
   useEffect(function*(){
-    if(noteEdit){
-      noteEdit.element.oninput=()=>setDirty(true)
-      noteEdit.element.onkeydown=e=>{
-        if(!(
-          e.ctrlKey&&e.key.toLowerCase()=='s'
-        ))
-          return
-        e.preventDefault()
-        e.stopPropagation()
-        set()
-      }
-      mainRef.current.append(noteEdit.element)
-    }
+    if(!noteEdit)
+      return yield
+    noteEdit.element.oninput=()=>setDirty(true)
+    mainRef.current.appendChild(noteEdit.element)
     yield
-    if(noteEdit)
-      noteEdit.element.remove()
+    mainRef.current.removeChild(noteEdit.element)
   },[noteEdit])
   useEffect(()=>{
     if(noteEdit)
@@ -122,6 +112,15 @@ let NoteEditPage=component(({
     ),
     div({
       class:'main',
+      onkeydown:e=>{
+        if(!(
+          e.ctrlKey&&e.key.toLowerCase()=='s'
+        ))
+          return
+        e.preventDefault()
+        e.stopPropagation()
+        set()
+      },
       ref:mainRef,
     }),
   )
