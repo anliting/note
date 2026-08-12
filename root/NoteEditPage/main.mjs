@@ -14,7 +14,6 @@ let NoteEditPage=component(({
   let firstNoteT=useState(Symbol())[0]
   let[noteT,setNoteT]=useState(firstNoteT)
   let[noteRow,setNoteRow]=useState()
-  let[wrap,setWrap]=useState(true)
   let[dirty,setDirty]=useState(false)
   let mainRef=useRef()
   let noteEdit=useMemo(
@@ -37,13 +36,6 @@ let NoteEditPage=component(({
     yield
     mainRef.current.removeChild(noteEdit.element)
   },[noteEdit])
-  useEffect(()=>{
-    if(noteEdit)
-      noteEdit.element.className=[
-        'noteEdit',
-        wrap?'wrap':'',
-      ].join(' ')
-  },[noteEdit,wrap])
   useEffect(()=>{
     if(isNew&&firstNoteT==noteT&&noteEdit)
       noteEdit.focus()
@@ -77,16 +69,6 @@ let NoteEditPage=component(({
       onLeftClick:goBack,
     },
       !!noteRow&&[
-        button({
-          class:[
-            'wrap',
-            'material-symbols-sharp',
-            wrap?'on':'off',
-          ].join(' '),
-          onclick:()=>setWrap(!wrap),
-        },
-          '\ue25b',
-        ),
         button({
           class:'delete material-symbols-sharp',
           onclick:async()=>{

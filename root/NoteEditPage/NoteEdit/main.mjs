@@ -37,6 +37,7 @@ export default class{
   #editor
   constructor(noteBody){
     this.element=document.createElement('div')
+    this.element.className='noteEdit wrap'
     let el=this.#editor=this.element.appendChild(document.createElement('div'))
     el.className='editor'
     el.contentEditable='true'
@@ -69,6 +70,13 @@ export default class{
         }))
       }
     }
+    let toolBar=this.element.appendChild(document.createElement('div'))
+    toolBar.className='toolBar'
+    let wrapButton=toolBar.appendChild(document.createElement('button'))
+    wrapButton.className='wrap material-symbols-sharp'
+    wrapButton.textContent='\ue25b'
+    wrapButton.onclick=()=>
+      wrapButton.classList.toggle('off',!this.element.classList.toggle('wrap'))
   }
   focus(){
     this.#editor.focus()
