@@ -37,9 +37,9 @@ export default class{
   #editor
   constructor(noteBody){
     this.element=document.createElement('div')
-    this.element.className='noteEdit wrap'
+    this.element.className='noteEdit'
     let el=this.#editor=this.element.appendChild(document.createElement('div'))
-    el.className='editor'
+    el.className='editor wrap'
     el.contentEditable='true'
     el.tabIndex=-1
     el.textContent=noteBodyText(noteBody)
@@ -77,7 +77,7 @@ export default class{
     wrapButton.textContent='\ue25b'
     wrapButton.onmousedown=e=>e.preventDefault()
     wrapButton.onclick=()=>
-      wrapButton.classList.toggle('off',!this.element.classList.toggle('wrap'))
+      wrapButton.classList.toggle('off',!el.classList.toggle('wrap'))
   }
   focus(){
     this.#editor.focus()
