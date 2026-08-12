@@ -63,6 +63,16 @@ let NoteEditPage=component(({
   },[noteT])
   return div({
     class:'noteEditPage',
+    onkeydown:e=>{
+      if(!(
+        e.ctrlKey&&e.key.toLowerCase()=='s'
+      ))
+        return
+      e.preventDefault()
+      e.stopPropagation()
+      if(noteEdit)
+        set()
+    },
   },
     TopBar({
       leftIcon:'\ue2ea',
@@ -86,6 +96,7 @@ let NoteEditPage=component(({
             'material-symbols-sharp',
             dirty?'':'saved',
           ].join(' '),
+          onmousedown:e=>e.preventDefault(),
           onclick:set,
         },
           '\ue161',
@@ -94,15 +105,6 @@ let NoteEditPage=component(({
     ),
     div({
       class:'main',
-      onkeydown:e=>{
-        if(!(
-          e.ctrlKey&&e.key.toLowerCase()=='s'
-        ))
-          return
-        e.preventDefault()
-        e.stopPropagation()
-        set()
-      },
       ref:mainRef,
     }),
   )

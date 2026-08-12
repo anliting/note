@@ -75,6 +75,7 @@ export default class{
     let wrapButton=toolBar.appendChild(document.createElement('button'))
     wrapButton.className='wrap material-symbols-sharp'
     wrapButton.textContent='\ue25b'
+    wrapButton.onmousedown=e=>e.preventDefault()
     wrapButton.onclick=()=>
       wrapButton.classList.toggle('off',!this.element.classList.toggle('wrap'))
   }
