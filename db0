@@ -19,7 +19,8 @@ create table"file"(
 create table"binary"(
   "binary"int8 primary key default nextval('serial')
     references"file"on delete cascade,
-  "binaryT"timestamp not null default now()
+  "binaryT"timestamp not null default now(),
+  "binaryState"text not null
 );
 create table"note"(
   "note"int8 primary key default nextval('serial')
@@ -39,16 +40,6 @@ create table"folderItem"(
 );
 alter table"user"add column"folder"
   int8 not null references"folder";
-alter table"binary"add column"binaryState"text;
-update"binary"set"binaryState"='ready';
-alter table"binary"alter column"binaryState"set not null;
-update"note"set"noteBody"=jsonb_build_object(
-  'type','list',
-  'list',case"noteBody"::jsonb
-    when'{}'::jsonb then'[]'::jsonb
-    else jsonb_build_array("noteBody"::jsonb)
-  end
-)::text;
 --create table"noteTag"(
 --  "note"int8 not null references"user"on delete cascade,
 --  "tag"text not null
