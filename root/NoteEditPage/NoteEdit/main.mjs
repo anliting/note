@@ -34,8 +34,11 @@ let replaceSelection=text=>{
   sel.addRange(r)
 }
 export default class{
+  #editor
   constructor(noteBody){
-    let el=this.element=document.createElement('div')
+    this.element=document.createElement('div')
+    let el=this.#editor=this.element.appendChild(document.createElement('div'))
+    el.className='editor'
     el.contentEditable='true'
     el.tabIndex=-1
     el.textContent=noteBodyText(noteBody)
@@ -68,14 +71,14 @@ export default class{
     }
   }
   focus(){
-    this.element.focus()
+    this.#editor.focus()
   }
   get value(){
     return JSON.stringify({
       type:'list',
       list:[{
         type:'text',
-        text:this.element.textContent,
+        text:this.#editor.textContent,
       }],
     })
   }

@@ -29,7 +29,14 @@
   display:flex;
 }
 .root>.noteEditPage .noteEdit{
-  width:100%;
+  flex:1 1 0;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+.root>.noteEditPage .noteEdit>.editor{
+  flex:1 1 0;
+  min-height:0;
   font-size:calc(.05*var(--zoom)*1px);
   padding:calc(0.04*var(--zoom)*1px);
   scroll-padding:calc(0.04*var(--zoom)*1px);
@@ -38,7 +45,7 @@
   font-family:monospace;
   white-space:pre;
 }
-.root>.noteEditPage .noteEdit.wrap{
+.root>.noteEditPage .noteEdit.wrap>.editor{
   white-space:pre-wrap;
   word-break:break-all;
 }
