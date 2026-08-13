@@ -35,11 +35,17 @@ let replaceSelection=text=>{
 }
 export default class{
   #editor
+  #wrap=true
+  #wrapButton
+  #render(){
+    this.#editor.classList.toggle('wrap',this.#wrap)
+    this.#wrapButton.classList.toggle('off',!this.#wrap)
+  }
   constructor(noteBody){
     this.element=document.createElement('div')
     this.element.className='noteEdit'
     let el=this.#editor=this.element.appendChild(document.createElement('div'))
-    el.className='editor wrap'
+    el.className='editor'
     el.contentEditable='true'
     el.tabIndex=-1
     el.textContent=noteBodyText(noteBody)
@@ -72,12 +78,15 @@ export default class{
     }
     let toolBar=this.element.appendChild(document.createElement('div'))
     toolBar.className='toolBar'
-    let wrapButton=toolBar.appendChild(document.createElement('button'))
+    let wrapButton=this.#wrapButton=toolBar.appendChild(document.createElement('button'))
     wrapButton.className='wrap material-symbols-sharp'
     wrapButton.textContent='\ue25b'
     wrapButton.onmousedown=e=>e.preventDefault()
-    wrapButton.onclick=()=>
-      wrapButton.classList.toggle('off',!el.classList.toggle('wrap'))
+    wrapButton.onclick=()=>{
+      this.#wrap=!this.#wrap
+      this.#render()
+    }
+    this.#render()
   }
   focus(){
     this.#editor.focus()
