@@ -15,6 +15,12 @@ let scrollCaretIntoView=()=>{
   probe.scrollIntoView({block:'nearest',inline:'nearest'})
   probe.remove()
 }
+let compositionInputTypes=[
+  'deleteByComposition',
+  'deleteCompositionText',
+  'insertCompositionText',
+  'insertFromComposition',
+]
 let offsetOf=(editor,node,offset)=>{
   let r=document.createRange()
   r.setStart(editor,0)
@@ -70,7 +76,7 @@ export default class{
     this.#editor.contentEditable='true'
     this.#editor.tabIndex=-1
     this.#editor.onbeforeinput=e=>{
-      if(e.isComposing)
+      if(e.isComposing||compositionInputTypes.includes(e.inputType))
         return
       e.preventDefault()
       let str
@@ -100,8 +106,11 @@ export default class{
         inputType:e.inputType,
       }))
     }
-    this.#editor.oncompositionend=()=>{
+    this.#editor.oninput=()=>{
       this.#text=this.#editor.textContent
+      let sel=getSelection()
+      if(sel.rangeCount&&this.#editor.contains(sel.focusNode))
+        this.#caret=offsetOf(this.#editor,sel.focusNode,sel.focusOffset)
     }
     let toolBar=this.node.appendChild(document.createElement('div'))
     toolBar.className='toolBar'
