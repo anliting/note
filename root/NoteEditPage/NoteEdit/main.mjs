@@ -42,17 +42,17 @@ export default class{
     this.#wrapButton.classList.toggle('off',!this.#wrap)
   }
   constructor(noteBody){
-    this.element=document.createElement('div')
-    this.element.className='noteEdit'
-    let el=this.#editor=this.element.appendChild(document.createElement('div'))
-    el.className='editor'
-    el.contentEditable='true'
-    el.tabIndex=-1
-    el.textContent=noteBodyText(noteBody)
-    el.onbeforeinput=e=>{
+    this.node=document.createElement('div')
+    this.node.className='noteEdit'
+    this.#editor=this.node.appendChild(document.createElement('div'))
+    this.#editor.className='editor'
+    this.#editor.contentEditable='true'
+    this.#editor.tabIndex=-1
+    this.#editor.textContent=noteBodyText(noteBody)
+    this.#editor.onbeforeinput=e=>{
       if(['insertParagraph','insertLineBreak'].includes(e.inputType)){
         e.preventDefault()
-        normalizeTrailingNewline(el)
+        normalizeTrailingNewline(this.#editor)
         replaceSelection('\n')
         scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
@@ -62,11 +62,11 @@ export default class{
         }))
       }
     }
-    el.onpaste=e=>{
+    this.#editor.onpaste=e=>{
       e.preventDefault()
       let text=e.clipboardData.getData('text/plain').replace(/\r\n?/g,'\n')
       if(text){
-        normalizeTrailingNewline(el)
+        normalizeTrailingNewline(this.#editor)
         replaceSelection(text)
         scrollCaretIntoView()
         e.target.dispatchEvent(new InputEvent('input',{
@@ -76,13 +76,13 @@ export default class{
         }))
       }
     }
-    let toolBar=this.element.appendChild(document.createElement('div'))
+    let toolBar=this.node.appendChild(document.createElement('div'))
     toolBar.className='toolBar'
-    let wrapButton=this.#wrapButton=toolBar.appendChild(document.createElement('button'))
-    wrapButton.className='wrap material-symbols-sharp'
-    wrapButton.textContent='\ue25b'
-    wrapButton.onmousedown=e=>e.preventDefault()
-    wrapButton.onclick=()=>{
+    this.#wrapButton=toolBar.appendChild(document.createElement('button'))
+    this.#wrapButton.className='wrap material-symbols-sharp'
+    this.#wrapButton.textContent='\ue25b'
+    this.#wrapButton.onmousedown=e=>e.preventDefault()
+    this.#wrapButton.onclick=()=>{
       this.#wrap=!this.#wrap
       this.#render()
     }

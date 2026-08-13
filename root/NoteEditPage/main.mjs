@@ -31,10 +31,10 @@ let NoteEditPage=component(({
   useEffect(function*(){
     if(!noteEdit)
       return yield
-    noteEdit.element.oninput=()=>setDirty(true)
-    mainRef.current.appendChild(noteEdit.element)
+    noteEdit.node.oninput=()=>setDirty(true)
+    mainRef.current.appendChild(noteEdit.node)
     yield
-    mainRef.current.removeChild(noteEdit.element)
+    mainRef.current.removeChild(noteEdit.node)
   },[noteEdit])
   useEffect(()=>{
     if(isNew&&firstNoteT==noteT&&noteEdit)
