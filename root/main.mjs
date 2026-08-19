@@ -68,8 +68,10 @@ let RootC=component(()=>{
   },[!!uploadTask.length])
   useEffect(function*(){
     let f=()=>{
-      let bcr=document.body.getBoundingClientRect()
-      setBcr([bcr.width,bcr.height])
+      setBcr([
+        visualViewport.scale*visualViewport.width,
+        visualViewport.scale*visualViewport.height,
+      ])
     }
     f()
     addEventListener('resize',f)
