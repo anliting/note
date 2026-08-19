@@ -15,32 +15,48 @@ navigator.serviceWorker.addEventListener('message',e=>{
     return setStyle(e.data.style)
 })
 let useHistoryStack=(defaultPage)=>{
-  let[pageStack,setPageStack]=useState(history.state||defaultPage)
+  let[pageStack,setPageStack]=useState(
+    navigation.currentEntry.getState()||defaultPage
+  )
   let pushStack=a=>{
     let state=[...pageStack,[crypto.randomUUID(),...a]]
-    history.pushState(state.map(a=>a.slice(0,3)),'')
-    setPageStack(state)
+    navigation.navigate(location.href,{
+      history:'push',
+      info:{stack:state},
+      state:state.map(a=>a.slice(0,3)),
+    })
   }
   let popStack=()=>{
-    if(history.length!=1)
-      return history.back()
+    if(navigation.canGoBack)
+      return navigation.back()
     let state=pageStack.slice(0,pageStack.length-1)
-    history.replaceState(state.map(a=>a.slice(0,3)),'')
+    navigation.updateCurrentEntry({state:state.map(a=>a.slice(0,3))})
     setPageStack(state)
   }
   useEffect(()=>{
-    history.replaceState(pageStack,'')
+    navigation.updateCurrentEntry({state:pageStack})
   },[])
   useEffect(function*(){
-    let f=e=>setPageStack(e.state)
-    addEventListener('popstate',f)
+    let f=e=>{
+      if(!e.canIntercept||e.navigationType=='reload')
+        return
+      let stack=e.info?.stack||e.destination.getState()
+      if(!stack)
+        return
+      e.intercept({
+        focusReset:'manual',
+        handler:async()=>setPageStack(stack),
+        scroll:'manual',
+      })
+    }
+    navigation.addEventListener('navigate',f)
     yield
-    removeEventListener('popstate',f)
+    navigation.removeEventListener('navigate',f)
   },[])
   return[
     pageStack,
     useCallback(stack=>{
-      history.replaceState(stack.map(a=>a.slice(0,3)),'')
+      navigation.updateCurrentEntry({state:stack.map(a=>a.slice(0,3))})
       setPageStack(stack)
     },[setPageStack]),
     pushStack,popStack
@@ -156,14 +172,18 @@ let RootC=component(()=>{
       move:1,
       movingFolderItem:pageOption.movingFolderItem,
       onCancel:()=>{
-        history.go(-(pageOption.layer+1))
+        navigation.traverseTo(navigation.entries()[
+          navigation.currentEntry.index-(pageOption.layer+1)
+        ].key)
       },
       onMove:async()=>{
         await api.setFolderItemFolder({
           folder:pageOption.folder,
           folderItem:pageOption.movingFolderItem,
         })
-        history.go(-(pageOption.layer+1))
+        navigation.traverseTo(navigation.entries()[
+          navigation.currentEntry.index-(pageOption.layer+1)
+        ].key)
       },
     }),
     NoteEditPage:()=>NoteEditPage({
