@@ -1,20 +1,28 @@
 import MapSet from          '../MapSet/main.mjs'
 export default class{
-  #getTaskSetByUploading
+  #getTaskSetByState
   #setUploadTask
   #taskSet
+  #fail(t,error){
+    this.#taskSet.set(t,t=>{
+      t.state='error'
+      t.error=error
+    })
+    this.#tryUpload()
+    this.#setUploadTask([...this.#taskSet])
+  }
   async #tryUpload(){
     while(
-      this.#getTaskSetByUploading(false).size&&
-      this.#getTaskSetByUploading(true).size<4
+      this.#getTaskSetByState('pending').size&&
+      this.#getTaskSetByState('uploading').size<4
     ){
-      let t=[...this.#getTaskSetByUploading(false)][0]
+      let t=[...this.#getTaskSetByState('pending')][0]
       let{
         file,
         folder,
         setFolderItemTabT,
       }=t
-      this.#taskSet.set(t,t=>t.uploading=true)
+      this.#taskSet.set(t,t=>t.state='uploading')
       ;(async()=>{
         let xhr=new XMLHttpRequest
         t.xhr=xhr
@@ -27,17 +35,22 @@ export default class{
           this.#setUploadTask([...this.#taskSet])
         }
         xhr.onload=()=>{
-          if(!(200<=xhr.status&&xhr.status<300))
-            return console.error(xhr)
+          if(!(200<=xhr.status&&xhr.status<300)){
+            console.error(xhr)
+            return this.#fail(t,`HTTP ${xhr.status}`)
+          }
           let res=JSON.parse(xhr.responseText)
-          if(!(res.type=='ok'))
-            return console.error(res)
+          if(!(res.type=='ok')){
+            console.error(res)
+            return this.#fail(t,res.type)
+          }
           this.#taskSet.delete(t)
           this.#tryUpload()
           this.#setUploadTask([...this.#taskSet])
           setFolderItemTabT(Symbol())
         }
-        xhr.onerror=e=>console.error(e)
+        xhr.onerror=()=>this.#fail(t,'network error')
+        xhr.ontimeout=()=>this.#fail(t,'timeout')
         let formData=new FormData
         formData.append('file',file)
         formData.append('folder',folder)
@@ -48,10 +61,10 @@ export default class{
   constructor({setUploadTask}){
     this.#setUploadTask=setUploadTask
     this.#taskSet=new MapSet
-    this.#getTaskSetByUploading=this.#taskSet.map(a=>a.uploading)
+    this.#getTaskSetByState=this.#taskSet.map(a=>a.state)
   }
   async cut(t){
-    if(t.uploading)
+    if(t.state=='uploading')
       t.xhr.abort()
     this.#taskSet.delete(t)
     this.#tryUpload()
@@ -64,12 +77,23 @@ export default class{
   }){
     for(let file of[...files])
       this.#taskSet.add({
-        abortController:new AbortController,
         file,
         folder,
         setFolderItemTabT,
-        uploading:false,
+        state:'pending',
       })
     this.#tryUpload()
+  }
+  async retry(t){
+    if(!(t.state=='error'))
+      return
+    this.#taskSet.set(t,t=>{
+      t.state='pending'
+      delete t.error
+      delete t.loaded
+      delete t.total
+    })
+    this.#tryUpload()
+    this.#setUploadTask([...this.#taskSet])
   }
 }

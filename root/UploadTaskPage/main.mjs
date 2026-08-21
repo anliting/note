@@ -8,6 +8,7 @@ export default component(({
   cutTask,
   goBack,
   me,
+  retryTask,
   uploadTask,
 })=>{
   /*uploadTask=[...uploadTask,{
@@ -34,8 +35,12 @@ export default component(({
           cutTask:()=>{
             cutTask(uploadTask)
           },
+          error:uploadTask.error,
           icon:'\ue9fc',
           key:weakMap.current.getOrInsert(uploadTask,Symbol()),
+          retryTask:()=>{
+            retryTask(uploadTask)
+          },
           title:uploadTask.file.name,
           loaded:uploadTask.loaded,
           total:uploadTask.total,

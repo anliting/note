@@ -61,3 +61,18 @@
   place-items:center;
   font-size:calc(.14*var(--zoom)*1px);
 }
+.root>.uploadTaskPage .uploadTaskItem.error>.uploadTaskItemMain{
+  width:calc(.4*var(--zoom)*1px);
+}
+.root>.uploadTaskPage .uploadTaskItem.error>.uploadTaskItemMain>.error{
+  height:calc(.06*var(--zoom)*1px);
+  line-height:1.2;
+  font-size:calc(.04*var(--zoom)*1px);
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+  color:#df4f4f;
+}
+.root>.uploadTaskPage .uploadTaskItem.error>.uploadTaskItemMain>.progressBar>.loaded{
+  background-color:#df4f4f;
+}

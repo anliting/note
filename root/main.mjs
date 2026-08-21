@@ -234,6 +234,7 @@ let RootC=component(()=>{
       goBack:popStack,
       key:pageUuid,
       me,
+      retryTask:uploadManager.current.retry.bind(uploadManager.current),
       uploadTask,
     }),
   }[pageName]()

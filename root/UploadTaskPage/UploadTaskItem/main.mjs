@@ -9,37 +9,49 @@ let toFixed2B=a=>{
 }
 export default component(({
   cutTask,
+  error,
   icon,
+  retryTask,
   title,
   loaded,
   total,
 })=>{
   return div({
-    class:'uploadTaskItem',
+    class:['uploadTaskItem',...error?['error']:[]].join(' '),
   },
     div({class:'icon material-symbols-sharp'},icon),
     div({class:'uploadTaskItemMain'},
       div({class:'title'},
         title,
       ),
-      div({class:'progress'},
-        div({class:'left'},
-          toFixed2B(loaded),
+      error?
+        div({class:'error'},
+          error,
+        ):
+        div({class:'progress'},
+          div({class:'left'},
+            toFixed2B(loaded),
+          ),
+          div({class:'right'},
+            `${
+              (~~(10000*loaded/total)/100).toFixed(2)
+            }%\u00a0${toFixed2B(total)}`,
+          ),
         ),
-        div({class:'right'},
-          `${
-            (~~(10000*loaded/total)/100).toFixed(2)
-          }%\u00a0${toFixed2B(total)}`,
-        ),
-      ),
       div({class:'progressBar'},
         div({
           class:'loaded',
           style:{
-            transform:`scaleX(${loaded/total})`,
+            transform:`scaleX(${error?1:loaded/total})`,
           },
         }),
       ),
+    ),
+    error&&button({
+      class:'right material-symbols-sharp',
+      onclick:retryTask,
+    },
+      '\ue5d5',
     ),
     button({
       class:'right material-symbols-sharp',
