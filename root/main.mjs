@@ -26,9 +26,11 @@ let useHistoryStack=(defaultPage)=>{
       state:state.map(a=>a.slice(0,3)),
     })
   }
-  let popStack=()=>{
+  let popStack=async()=>{
     if(navigation.canGoBack)
-      return navigation.back()
+      try{
+        return await navigation.back().committed
+      }catch(e){}
     let state=pageStack.slice(0,pageStack.length-1)
     navigation.updateCurrentEntry({state:state.map(a=>a.slice(0,3))})
     setPageStack(state)
