@@ -12,7 +12,7 @@ fs.promises.writeFile('build/root',await minifyHtml(`
   <link rel=icon href=/%23favicon32 sizes=32x32>
   <link rel=icon href=/%23favicon192 sizes=192x192>
   <link rel=icon href=/%23favicon512 sizes=512x512>
-  <link rel=manifest href=/%23manifest>
+  <link rel=manifest href=/%23manifest crossorigin=use-credentials>
   <style>${minifyCss(await linkCss('root/main.css'))}</style>
   <body>
   <script type=module>${await minifyJs(await linkJs('root/main.mjs'))}</script>
