@@ -7,7 +7,6 @@ import pathnameMap from         './pathnameMap/main.mjs'
 let db={
   pool:new pg.Pool({
     host:'db',
-    port:5432,
     user:'postgres',
   }),
   /*async begin(f){
