@@ -193,6 +193,7 @@ let RootC=component(()=>{
       editingNote:pageOption,
       getNoteByNote:api.getNoteByNote,
       goBack:popStack,
+      goSettingPage:()=>pushStack(['SettingPage']),
       key:pageUuid,
       session:pageSession||{},
       setNoteBody:api.setNote,
@@ -234,6 +235,7 @@ let RootC=component(()=>{
     UploadTaskPage:()=>UploadTaskPage({
       cutTask:uploadManager.current.cut.bind(uploadManager.current),
       goBack:popStack,
+      goSettingPage:()=>pushStack(['SettingPage']),
       key:pageUuid,
       me,
       retryTask:uploadManager.current.retry.bind(uploadManager.current),

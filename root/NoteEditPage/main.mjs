@@ -77,6 +77,14 @@ let NoteEditPage=component(({
     TopBar({
       leftIcon:'\ue2ea',
       onLeftClick:goBack,
+      onSettingClick:async()=>{
+        if(dirty){
+          if(!confirm('Save changes before opening settings?'))
+            return
+          await set()
+        }
+        goSettingPage()
+      },
     },
       !!noteRow&&[
         button({

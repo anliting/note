@@ -1,7 +1,7 @@
 import{dom}from 'concept'
 let{button,div}=dom
 export default({
-  leftIcon,onLeftClick,title,
+  leftIcon,onLeftClick,onSettingClick,title,
 },...child)=>div({
   class:'topBar',
 },
@@ -17,4 +17,10 @@ export default({
     ),
   ),
   child,
+  onSettingClick&&button({
+    class:'right setting material-symbols-sharp',
+    onclick:onSettingClick,
+  },
+    '\ue8b8',
+  ),
 )

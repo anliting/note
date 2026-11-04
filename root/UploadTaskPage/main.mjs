@@ -7,6 +7,7 @@ let{button,div,input}=dom
 export default component(({
   cutTask,
   goBack,
+  goSettingPage,
   me,
   retryTask,
   uploadTask,
@@ -25,6 +26,7 @@ export default component(({
     TopBar({
       leftIcon:'\ue2ea',
       onLeftClick:goBack,
+      onSettingClick:goSettingPage,
       title:`Upload Tasks${uploadTask.length?` (${uploadTask.length})`:''}`,
     }),
     div({

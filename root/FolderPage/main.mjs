@@ -174,11 +174,11 @@ export default component(({
         })
       :
         TopBar(me.folder==folder?{
-          leftIcon:'\ue5d2',
-          onLeftClick:goSettingPage,
+          onSettingClick:goSettingPage,
         }:{
           leftIcon:'\ue2ea',
           onLeftClick:goBack,
+          onSettingClick:goSettingPage,
           title:folderItemName||'',
         },
           uploading&&button({

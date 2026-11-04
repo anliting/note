@@ -11,8 +11,7 @@ export default component(({
       class:['mainLayer'].join(' '),
     },
       TopBar({
-        leftIcon:'\ue5d2',
-        onLeftClick:goSettingPage,
+        onSettingClick:goSettingPage,
       }),
       div({
         class:'main',
