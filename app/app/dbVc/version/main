@@ -1,9 +1,10 @@
-import pg from'pg'
+import db from'../../db/main'
 import{readFile}from'node:fs/promises'
 let arc={}
-arc[''][0]={
+let add=(a,b,c)=>(arc[a]=arc[a]||{})[b]=c
+add('',0,{
   async transfer(){
-    let pool=new pg.Pool
+    let pool=db.pool
     try{
       await pool.query(`
         create table"version"("version"text not null);
@@ -15,11 +16,11 @@ arc[''][0]={
       await pool.end()
     }
   }
-}
+})
 export default{
   arc,
   async version(){
-    let pool=new pg.Pool
+    let pool=db.pool
     try{
       return(await pool.query(`
         select"version"from"version"

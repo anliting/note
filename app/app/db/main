@@ -4,7 +4,7 @@ export default{
     host:'db',
     user:'postgres',
   }),
-  /*async begin(f){
+  async begin(f){
     let client=await this.pool.connect()
     try{
       await client.query('begin')
@@ -16,5 +16,5 @@ export default{
     }finally{
       client.release()
     }
-  },*/
+  },
 }
