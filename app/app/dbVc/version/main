@@ -1,0 +1,35 @@
+import pg from'pg'
+import{readFile}from'node:fs/promises'
+let arc={}
+arc[''][0]={
+  async transfer(){
+    let pool=new pg.Pool
+    try{
+      await pool.query(`
+        create table"version"("version"text not null);
+      `)
+      await pool.query(`
+        insert into"version"values('0');
+      `)
+    }finally{
+      await pool.end()
+    }
+  }
+}
+export default{
+  arc,
+  async version(){
+    let pool=new pg.Pool
+    try{
+      return(await pool.query(`
+        select"version"from"version"
+      `)).rows[0].version
+    }catch(e){
+      if(e.code=='42P01')
+        return''
+      throw e
+    }finally{
+      await pool.end()
+    }
+  },
+}

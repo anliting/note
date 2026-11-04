@@ -1,8 +1,9 @@
 FROM alpine:3.22.0
 RUN apk add --no-cache curl git nodejs npm
 WORKDIR /app1
+COPY app/app/package*.json .
 RUN <<EOF
-npm i argon2 busboy mime-types pg
+npm i --omit=dev
 curl https://raw.githubusercontent.com/google/material-design-icons/3310326d4458d603efea5434b67f28dce05ea433/variablefont/MaterialSymbolsRounded%5BFILL%2CGRAD%2Copsz%2Cwght%5D.woff2 >ms.woff2
 EOF
 WORKDIR /app

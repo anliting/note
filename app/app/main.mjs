@@ -2,27 +2,9 @@ import http from                'http'
 import pg from                  'pg'
 import url from                 'url'
 import cutBinary from           './cutBinary/main.mjs'
+import db from                  './db/main'
 import folderItem from          './folderItem/main.mjs'
 import pathnameMap from         './pathnameMap/main.mjs'
-let db={
-  pool:new pg.Pool({
-    host:'db',
-    user:'postgres',
-  }),
-  /*async begin(f){
-    let client=await this.pool.connect()
-    try{
-      await client.query('begin')
-      await f(client)
-      await client.query('commit')
-    }catch(e){
-      await client.query('rollback')
-      throw e
-    }finally{
-      client.release()
-    }
-  },*/
-}
 console.log('Deleting dirty binaries...')
 while(1)try{
   for(let{binary}of(await db.pool.query(`

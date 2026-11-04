@@ -1,0 +1,17 @@
+import{parseArgs}from'util'
+import version from'./version/main'
+let args=parseArgs({
+  options:{
+    to:{
+      type:'string',
+      short:'t',
+    },
+  },
+})
+let currentVersion=await version.version()
+console.log(`Current version is ${JSON.stringify(currentVersion)}.`)
+console.log(`Current version can be transferred to the followings:`)
+for(let v in version.arc[currentVersion])
+  console.log(`${JSON.stringify(v)}`)
+if('to'in args.values)
+  await version.arc[currentVersion][args.values.to].transfer()

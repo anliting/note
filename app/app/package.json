@@ -1,0 +1,8 @@
+{
+  "dependencies":{
+    "argon2":"^0.45.2",
+    "busboy":"^1.6.0",
+    "mime-types":"^3.0.2",
+    "pg":"^8.23.1"
+  }
+}
