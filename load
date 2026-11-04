@@ -1,0 +1,4 @@
+#!/bin/bash
+docker compose exec -T db dropdb -U postgres --if-exists postgres
+docker compose exec -T db createdb -U postgres postgres
+docker compose exec -T db psql -U postgres <dump.sql

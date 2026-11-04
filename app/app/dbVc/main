@@ -16,8 +16,11 @@ try{
   console.log(`Current version can be transferred to the followings:`)
   for(let v in version.arc[currentVersion])
     console.log(`${JSON.stringify(v)}`)
-  if('to'in args.values)
+  if('to'in args.values){
+    console.log(`Transferring to version ${JSON.stringify(args.values.to)}...`)
     await version.arc[currentVersion][args.values.to].transfer(db)
+    console.log(`Transferred to version ${JSON.stringify(args.values.to)}.`)
+  }
 }finally{
   await db.end()
 }
