@@ -25,12 +25,23 @@ let db={
     }
   },*/
 }
-for(let{binary}of(await db.pool.query(`
-  select"binary"
-  from"binary"
-  where"binaryState"in('downloading','deleting')
-`)).rows)
-  await cutBinary({db},binary)
+console.log('Deleting dirty binaries...')
+while(1)try{
+  for(let{binary}of(await db.pool.query(`
+    select"binary"
+    from"binary"
+    where"binaryState"in('downloading','deleting')
+  `)).rows)
+    await cutBinary({db},binary)
+  break
+}catch(e){
+  if(e.code=='ENOTFOUND'&&e.hostname=='db'){
+    console.log('Failed to resolve hostname "db". Retry after 1 second.')
+    await new Promise(rs=>setTimeout(rs,1e3))
+  }else
+    throw e
+}
+console.log('Dirty binaries deleted.')
 let abortController=new AbortController
 let abortedPromise=new Promise(rs=>
   abortController.signal.addEventListener('abort',rs)
