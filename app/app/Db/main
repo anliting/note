@@ -1,0 +1,28 @@
+import pg from                  'pg'
+export default class{
+  async begin(f){
+    let client=await this.pool.connect(),destroy=false
+    try{
+      await client.query('begin')
+      let v=await f(client)
+      await client.query('commit')
+      return v
+    }catch(e){
+      try{
+        await client.query('rollback')
+      }catch(e){
+        destroy=true
+      }
+      throw e
+    }finally{
+      client.release(destroy)
+    }
+  }
+  pool=new pg.Pool({
+    host:'db',
+    user:'postgres',
+  })
+  end(){
+    return this.pool.end()
+  }
+}

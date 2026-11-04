@@ -1,36 +1,29 @@
-import db from'../../db/main'
 import{readFile}from'node:fs/promises'
 let arc={}
 let add=(a,b,c)=>(arc[a]=arc[a]||{})[b]=c
 add('',0,{
-  async transfer(){
-    let pool=db.pool
-    try{
-      await pool.query(`
+  async transfer(db){
+    return db.begin(async client=>{
+      await client.query(`
         create table"version"("version"text not null);
-      `)
-      await pool.query(`
         insert into"version"values('0');
       `)
-    }finally{
-      await pool.end()
-    }
+    })
   }
 })
 export default{
   arc,
-  async version(){
-    let pool=db.pool
-    try{
-      return(await pool.query(`
-        select"version"from"version"
-      `)).rows[0].version
-    }catch(e){
-      if(e.code=='42P01')
-        return''
-      throw e
-    }finally{
-      await pool.end()
-    }
+  async version(db){
+    return db.begin(async client=>{
+      try{
+        return(await client.query(`
+          select"version"from"version"
+        `)).rows[0].version
+      }catch(e){
+        if(e.code=='42P01')
+          return''
+        throw e
+      }
+    })
   },
 }
