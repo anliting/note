@@ -74,6 +74,7 @@ body{
   font-size:calc(.1*var(--zoom)*1px);
 }
 .root>* button.typeA{
+  border-radius:calc(.01*var(--zoom)*1px);
   width:calc(.4*var(--zoom)*1px);
   aspect-ratio:4/1;
   font-size:calc(.05*var(--zoom)*1px);
@@ -115,6 +116,9 @@ body{
 }
 .root.dark button.typeA{
   background:#3f3f3f;
+}
+.root.dark button.typeA:hover{
+  background:#4f4f4f;
 }
 .root.dark input{
   background:#2f2f2f;

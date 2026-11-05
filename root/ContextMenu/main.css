@@ -22,8 +22,7 @@
   font-family:sans-serif;
 }
 .root .contextMenu>*>*{
-  transition-property:background;
-  transition-duration:.2s;
+  transition:background .2s;
 }
 .root .contextMenu>*>:hover{
   background-color:#4f4f4f;

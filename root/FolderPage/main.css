@@ -28,8 +28,7 @@
   }
 }
 .root>.folderPage>.mainLayer>.main{
-  transition-property:background;
-  transition-duration:.2s;
+  transition:background .2s;
 }
 .root>.folderPage>.dropzone{
   top:0;
@@ -44,12 +43,15 @@
   position:absolute;
   bottom:calc(.05*var(--zoom)*1px);
   right:calc(.05*var(--zoom)*1px);
-  border-radius:calc(.04*var(--zoom)*1px);
+  border-radius:calc(.01*var(--zoom)*1px);
   box-shadow:0 0 calc(.01*var(--zoom)*1px) rgba(0,0,0,.6);
   width:calc(.15*var(--zoom)*1px);
   height:calc(.15*var(--zoom)*1px);
-  background-color:#4f4f4f;
+  background-color:#3f3f3f;
   font-size:calc(.1*var(--zoom)*1px);
+}
+.root>.folderPage .add:hover{
+  background-color:#4f4f4f;
 }
 .root>.folderPage .bottomBar{
   position:absolute;
@@ -64,7 +66,7 @@
   background-color:#2f2f2f;
 }
 .root>.folderPage .bottomBar>*{
-  border-radius:calc(.1*var(--zoom)*1px);
+  border-radius:calc(.01*var(--zoom)*1px);
   box-shadow:0 0 calc(.01*var(--zoom)*1px) rgba(0,0,0,.6);
   height:calc(.1*var(--zoom)*1px);
   margin-right:calc(.04*var(--zoom)*1px);

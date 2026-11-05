@@ -31,4 +31,4 @@ COPY --from=0 /app/build build
 # demands a handler be attached within the cycle right after the rejection
 # (e.g. a promise created now and awaited later would kill the process if it
 # rejects early).
-CMD ["node","--unhandled-rejections=none","app/main.mjs"]
+CMD ["node","--unhandled-rejections=none","app/main"]
