@@ -2,9 +2,9 @@ import http from                'http'
 import pg from                  'pg'
 import url from                 'url'
 import Db from                  './Db/main'
-import cutBinary from           './cutBinary/main.mjs'
-import folderItem from          './folderItem/main.mjs'
-import pathnameMap from         './pathnameMap/main.mjs'
+import cutBinary from           './cutBinary/main'
+import folderItem from          './folderItem/main'
+import pathnameMap from         './pathnameMap/main'
 let db=new Db
 try{
   console.log('Deleting dirty binaries...')

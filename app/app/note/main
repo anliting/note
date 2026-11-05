@@ -1,5 +1,5 @@
-import base from          '../base/main.mjs'
-import{getSessionKey}from '../user/main.mjs'
+import base from          '../base/main'
+import{getSessionKey}from '../user/main'
 let apiMap={}
 apiMap.cutNote=getSessionKey(async({db,message,reply,sk})=>{
   if(!(

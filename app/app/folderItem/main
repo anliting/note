@@ -3,7 +3,7 @@ import fs from            'fs'
 import mime from          'mime-types'
 import stream from        'stream/promises'
 import url from           'url'
-import{getSessionKey}from '../user/main.mjs'
+import{getSessionKey}from '../user/main'
 let allowedMimeSet=new Set([
   'application/pdf',
   'audio/mp4',

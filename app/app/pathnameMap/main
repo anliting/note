@@ -1,9 +1,9 @@
 import{buffer}from              'stream/consumers'
-import{apiMap as file}from      '../file/main.mjs'
-import fileResponseHandler from '../fileResponseHandler/main.mjs'
-import{apiMap as note}from      '../note/main.mjs'
-import putBinary from           '../putBinary/main.mjs'
-import{apiMap as user}from      '../user/main.mjs'
+import{apiMap as file}from      '../file/main'
+import fileResponseHandler from '../fileResponseHandler/main'
+import{apiMap as note}from      '../note/main'
+import putBinary from           '../putBinary/main'
+import{apiMap as user}from      '../user/main'
 let apiMap=Object.assign({},file,note,user)
 export default{
   '/':fileResponseHandler(
