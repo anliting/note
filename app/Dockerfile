@@ -1,5 +1,5 @@
-FROM alpine:3.22.0
-RUN apk add --no-cache curl git nodejs npm
+FROM node:26-alpine
+RUN apk add --no-cache curl
 WORKDIR /app1
 COPY app/app/package*.json .
 RUN <<EOF
@@ -17,8 +17,7 @@ COPY sw sw
 RUN <<EOF
 node make/main.mjs
 EOF
-FROM alpine:3.22.0
-RUN apk add --no-cache nodejs
+FROM node:26-alpine
 WORKDIR /app
 COPY --from=0 /app1/ms.woff2 build/ms.woff2
 COPY --from=0 /app1/node_modules node_modules

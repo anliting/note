@@ -25,4 +25,7 @@ export default class{
   end(){
     return this.pool.end()
   }
+  async[Symbol.asyncDispose](){
+      await this.end()
+  }
 }
