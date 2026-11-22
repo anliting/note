@@ -4,16 +4,16 @@
 git clone --recurse-submodules git@github.com:anliting/note.git
 ```
 
-Set `POSTGRES_PASSWORD` in `.env`:
-
-```
-echo "POSTGRES_PASSWORD=$(pwgen -s 16 1)" >>.env
-```
-
 Set `COMPOSE_FILE` in `.env`:
 
 ```
 echo 'COMPOSE_FILE=compose.yml:dev/compose.yml' >>.env
+```
+
+Set `POSTGRES_PASSWORD` in `.env`:
+
+```
+echo "POSTGRES_PASSWORD=$(pwgen -s 16 1)" >>.env
 ```
 
 ```
