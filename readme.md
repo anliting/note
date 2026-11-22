@@ -11,6 +11,12 @@ docker compose exec -T db psql -U postgres <db0
 docker compose up -d app
 ```
 
+# Git Clone
+
+```
+git clone --recurse-submodules git@github.com:anliting/note.git
+```
+
 # Design
 
 Session cookie has a max age of 2147483647 is by design. "Revoking session cookie" is a pending issue and it will be implemented.
