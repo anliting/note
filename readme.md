@@ -1,7 +1,16 @@
-Set `dbPassword` in `.env`.
+# Set Up Development Environment
+
+```
+git clone --recurse-submodules git@github.com:anliting/note.git
+```
+
+Set `POSTGRES_PASSWORD` in `.env`.
 
 `.env`:
+
+```
 COMPOSE_FILE=compose.yml:dev/compose.yml
+```
 
 ```
 mkcert -install
@@ -9,12 +18,6 @@ mkcert ::1
 docker compose up -d db
 docker compose exec -T db psql -U postgres <db0
 docker compose up -d app
-```
-
-# Git Clone
-
-```
-git clone --recurse-submodules git@github.com:anliting/note.git
 ```
 
 # Design
