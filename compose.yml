@@ -16,4 +16,4 @@ services:
       retries: 20
     image: postgres:18.0
     volumes:
-      - ./db:/var/lib/postgresql
+      - db:/var/lib/postgresql
