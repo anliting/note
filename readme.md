@@ -4,7 +4,11 @@
 git clone --recurse-submodules git@github.com:anliting/note.git
 ```
 
-Set `POSTGRES_PASSWORD` in `.env`.
+Set `POSTGRES_PASSWORD` in `.env`:
+
+```
+echo "POSTGRES_PASSWORD=$(pwgen -s 16 1)" >>.env
+```
 
 `.env`:
 
