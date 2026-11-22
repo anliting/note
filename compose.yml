@@ -17,3 +17,5 @@ services:
     image: postgres:18.0
     volumes:
       - db:/var/lib/postgresql
+volumes:
+  db:
