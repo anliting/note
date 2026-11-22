@@ -10,10 +10,10 @@ Set `POSTGRES_PASSWORD` in `.env`:
 echo "POSTGRES_PASSWORD=$(pwgen -s 16 1)" >>.env
 ```
 
-`.env`:
+Set `COMPOSE_FILE` in `.env`:
 
 ```
-COMPOSE_FILE=compose.yml:dev/compose.yml
+echo 'COMPOSE_FILE=compose.yml:dev/compose.yml' >>.env
 ```
 
 ```
