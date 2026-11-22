@@ -98,8 +98,12 @@ export default class{
       let end=offsetOf(this.#editor,r.endContainer,r.endOffset)
       if(str==''&&start==end)
         return
-      this.#apply(start,end,str,
-        ['insertParagraph','insertLineBreak','insertFromPaste'].includes(e.inputType))
+      this.#apply(
+        start,end,str,
+        [
+          'insertParagraph','insertLineBreak','insertFromPaste'
+        ].includes(e.inputType)
+      )
       e.target.dispatchEvent(new InputEvent('input',{
         bubbles:true,
         data:str||null,
